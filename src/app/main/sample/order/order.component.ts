@@ -69,9 +69,7 @@ export class OrderComponent implements OnInit {
         break;
       case "payment":
         // this.paymentFormSubmit = true;
-        console.log(this.paymentControls.paymentStatus.value);
-        
-        return
+        return;
         break;
     }
     if (!data.invalid) {
@@ -237,11 +235,9 @@ export class OrderComponent implements OnInit {
       return;
     }
     if (this.dressCollection.status === "INVALID") {
-      console.log("==============");
       return;
     }
     this.dressCollection.push(this.createMeasurementForm());
-    console.log(this.dressCollection);
   }
 
   removeDressFromOrder(index: any) {
@@ -266,7 +262,10 @@ export class OrderComponent implements OnInit {
     return this.fb.group({
       dressId: ["", Validators.required],
       dressName: ["", Validators.required],
+      measurementId: [""],
       configList: this.fb.array([], Validators.required),
+      description: [""],
+      tag: ["", Validators.required],
     });
   }
 
@@ -282,7 +281,7 @@ export class OrderComponent implements OnInit {
   // Handle dress selection
   onDressChange(selectedDress: any, index: any) {
     // Clear existing dress details
-    this.getIndividualDress(index).controls.dressName.setValue(selectedDress.name)
+    this.getIndividualDress(index).controls.dressName.setValue(selectedDress.name);
     while (this.getConfigDetails(index).length !== 0) {
       this.getConfigDetails(index).removeAt(0);
     }
@@ -378,6 +377,8 @@ export class OrderComponent implements OnInit {
   patchMeasurementDetails(selectedMeasurement: any, index: any) {
     let patchMap;
     if (selectedMeasurement) {
+      this.getIndividualDressController(index).tag.setValue(selectedMeasurement.tag)
+      this.getIndividualDressController(index).description.setValue(selectedMeasurement.description)
       patchMap = new Map(
         selectedMeasurement.configList.map((config: any) => {
           return [config.configId.configId, config.value];
@@ -389,7 +390,6 @@ export class OrderComponent implements OnInit {
       const id = measurementForm.get("configId").value;
 
       if (patchMap?.get(id)) {
-        console.log(patchMap?.get(id), "================", id);
         measurementForm.patchValue({
           value: patchMap.get(id),
         });
@@ -423,5 +423,16 @@ export class OrderComponent implements OnInit {
       this.customerMeasurementList[index] = data.items;
       this.customerMeasurementList[index + 1] = [];
     });
+  }
+
+  addOrder() {
+    // this.orderForm.value
+    let userDetail = this.customerSelected ? this.customerData : this.accountDetailsForm.value;
+    let orderList = this.orderForm.value;
+    let paymentDetail = this.paymentForm.value;
+    console.log(orderList, "=======================", userDetail, "=======================", paymentDetail);
+    //  let a =  this.dressCollectionControl.forEach((dress) => {
+    //   return dress.value
+    //   });
   }
 }

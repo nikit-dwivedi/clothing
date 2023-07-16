@@ -234,6 +234,19 @@
                               </div>
                             </div>
                           </div>
+                          <div class="row">
+                            <div class="form-group col-md-6">
+                              <label class="form-label" for="tag">description</label>
+                              <input formControlName="description" id="description" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label class="form-label" for="tag">Tag</label>
+                              <input formControlName="tag" id="tag" class="form-control" [ngClass]="{ 'is-invalid': getIndividualDressController(ind).tag.errors && measurementFormSubmit }"/>
+                              <div *ngIf="getIndividualDressController(ind).tag.errors && measurementFormSubmit" class="form-text text-danger">
+                                <small *ngIf="getIndividualDressController(ind).tag.errors.required">Tag is required.</small>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </ng-container>
@@ -265,18 +278,16 @@
               <div class="content-header">
                 <h5 class="mb-0">Order Details</h5>
                 <div class="d-flex justify-content-center">
-                  <div class="order-card ml-4" *ngFor="let order of dressCollectionControl,let ind = index">
-                      <div class="order-pricing-block-content">
-                        <p class="order-pricing-plan">Measurement</p>
-                        <div class="order-price-value">
-                          <div id="order-priceDiscountCent">{{order.value.dressName}}</div>
-                        </div>
-                        <ul class="order-check-list">
-                          <li class="order-check-list-item" *ngFor="let config of getConfigControls(ind),let i = index">
-                            {{config.value.name}} - {{config.value.value}}
-                          </li>
-                        </ul>
+                  <div class="order-card ml-4" *ngFor="let order of dressCollectionControl; let ind = index">
+                    <div class="order-pricing-block-content">
+                      <p class="order-pricing-plan">Measurement</p>
+                      <div class="order-price-value">
+                        <div id="order-priceDiscountCent">{{ order.value.dressName }}</div>
                       </div>
+                      <ul class="order-check-list">
+                        <li class="order-check-list-item" *ngFor="let config of getConfigControls(ind); let i = index">{{ config.value.name }} - {{ config.value.value }}</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -328,7 +339,7 @@
                     <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                   </button>
-                  <button (click)="horizontalWizardStepperNext(paymentForm, 'payment')" type="submit" class="btn btn-success btn-submit" rippleEffect>
+                  <button (click)="addOrder()" type="submit" class="btn btn-success btn-submit" rippleEffect>
                     <span class="align-middle d-sm-inline-block d-none">Submit</span>
                     <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
                   </button>

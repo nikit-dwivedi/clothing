@@ -1,4 +1,4 @@
-import { CoreConfig } from '@core/types';
+import { CoreConfig } from "@core/types";
 
 /**
  * Default App Config
@@ -16,9 +16,9 @@ import { CoreConfig } from '@core/types';
 // prettier-ignore
 export const coreConfig: CoreConfig = {
   app: {
-    appName     : 'Vuexy',                                        // App Name
-    appTitle    : 'Vuexy - Angular 14+ Bootstrap Admin Template', // App Title
-    appLogoImage: 'assets/images/logo/logo.svg',                  // App Logo
+    appName     : 'Gohil',                                        // App Name
+    appTitle    : 'Gohil Fashion Studio', // App Title
+    appLogoImage: 'assets/images/logo/logos.png',                  // App Logo
     appLanguage : 'en',                                           // App Default Language (en, fr, de, pt etc..)
   },
   layout: {
@@ -45,7 +45,7 @@ export const coreConfig: CoreConfig = {
       backgroundColor      : ''               // BS color i.e bg-primary, bg-success
     },
     enableLocalStorage: true,
-    customizer  : false,                       // Boolean: true, false (Enable theme customizer)
+    customizer  : true,                       // Boolean: true, false (Enable theme customizer)
     scrollTop   : false,                       // Boolean: true, false (Enable scroll to top button)
     buyNow      : false                        // Boolean: true, false (Set false in real project, For demo purpose only)
   }
