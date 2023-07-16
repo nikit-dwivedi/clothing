@@ -13,11 +13,16 @@
 .order-card {
   width: 190px;
   height: 254px;
-  background: $primary;
+  // background:linear-gradient( 135deg, #FFF886 10%, #F072B6 100%);
+  background-color: #d0ae81;
+background-image: linear-gradient(315deg, #d0ae81 0%, #F7CE68 50%, #d0ae81 100%);
+
+  // background:   radial-gradient( circle farthest-corner at 22.4% 21.7%, #FFD194 0%, $primary 100.2% );
+
   padding: 1rem;
   border-radius: 1rem;
-  border: .5vmin solid #05060f;
-  box-shadow: .4rem .4rem #05060f;
+  // border: .5vmin solid #05060f;
+  box-shadow: 0 0 1px 0 rgb(8 8 8 / 63%), 0 6px 12px 0 rgb(0 0 0);
   overflow: hidden;
   color: black;
 }
@@ -72,7 +77,8 @@
   display: flex;
   position: relative;
   background-color: #fff;
-  box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+  // box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 6px 12px 0 rgba(0, 0, 0, 0.15);
   padding: 0.75rem;
   border-radius: 99px;
 }

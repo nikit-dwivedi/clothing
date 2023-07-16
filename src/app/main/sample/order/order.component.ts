@@ -68,7 +68,10 @@ export class OrderComponent implements OnInit {
         this.measurementFormSubmit = true;
         break;
       case "payment":
-        this.paymentFormSubmit = true;
+        // this.paymentFormSubmit = true;
+        console.log(this.paymentControls.paymentStatus.value);
+        
+        return
         break;
     }
     if (!data.invalid) {
