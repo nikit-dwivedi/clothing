@@ -1,11 +1,17 @@
 @import '@core/scss/angular/libs/form-wizard.component.scss';
 @import '@core/scss/angular/libs/select.component.scss';
-@import '@core/scss/angular/libs/datatables.component.scss';
+// @import '@core/scss/angular/libs/datatables.component.scss';
+
 
 
 
 .datatable-scroll {
   width: auto !important;
+}
+
+.custom-dark{
+  color: #b4b7bd ;
+  background-color: #283046 !important;
 }
 
 
@@ -76,7 +82,7 @@ background-image: linear-gradient(315deg, #d0ae81 0%, #F7CE68 50%, #d0ae81 100%)
 .tabs {
   display: flex;
   position: relative;
-  background-color: #fff;
+  background-color: #fff; 
   // box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 6px 12px 0 rgba(0, 0, 0, 0.15);
   padding: 0.75rem;

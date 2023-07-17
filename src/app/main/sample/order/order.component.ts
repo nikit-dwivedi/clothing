@@ -98,6 +98,11 @@ export class OrderComponent implements OnInit {
     this.horizontalWizardStepper.previous();
   }
 
+  setStepperColor() {
+    let localConfig = JSON.parse(localStorage.getItem("config"));
+    return localConfig.layout.skin === "dark" ? "custom-dark" : "";
+  }
+
   // -------------------------------------------------Modal------------------------------------------------- //
 
   /**
@@ -184,6 +189,7 @@ export class OrderComponent implements OnInit {
     this.paymentForm = this.fb.group({
       paymentStatus: ["pending", Validators.required],
       paymentType: ["cash", Validators.required],
+      amount: ["", Validators.required],
     });
 
     // -------------------------------------------------Forms------------------------------------------------- //
@@ -377,8 +383,9 @@ export class OrderComponent implements OnInit {
   patchMeasurementDetails(selectedMeasurement: any, index: any) {
     let patchMap;
     if (selectedMeasurement) {
-      this.getIndividualDressController(index).tag.setValue(selectedMeasurement.tag)
-      this.getIndividualDressController(index).description.setValue(selectedMeasurement.description)
+      this.getIndividualDressController(index).tag.setValue(selectedMeasurement.tag);
+      this.getIndividualDressController(index).description.setValue(selectedMeasurement.description);
+      this.getIndividualDressController(index).measurementId.setValue(selectedMeasurement.measurementId);
       patchMap = new Map(
         selectedMeasurement.configList.map((config: any) => {
           return [config.configId.configId, config.value];
@@ -427,6 +434,12 @@ export class OrderComponent implements OnInit {
 
   addOrder() {
     // this.orderForm.value
+    this.paymentFormSubmit = true;
+    if (this.paymentForm.invalid) {
+      return
+    }
+    this.paymentFormSubmit = false;
+
     let userDetail = this.customerSelected ? this.customerData : this.accountDetailsForm.value;
     let orderList = this.orderForm.value;
     let paymentDetail = this.paymentForm.value;
