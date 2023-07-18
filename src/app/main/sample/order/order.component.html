@@ -34,8 +34,8 @@
                 </div>
               </div>
               <ngx-datatable [rows]="kitchenSinkRows" [rowHeight]="58" class="bootstrap core-bootstrap" [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true" [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption">
-                <ngx-datatable-column name="Name" prop="name" [width]="280">
-                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                <ngx-datatable-column name="Name" prop="customerId" [width]="280">
+                  <ng-template let-row="row" let-name="value.name" ngx-datatable-cell-template>
                     <div class="d-flex align-items-center">
                       <div class="cell-line-height">
                         <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
@@ -45,9 +45,10 @@
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Contact" prop="contact" [width]="250"></ngx-datatable-column>
-                <ngx-datatable-column name="Alternate Contact" prop="altContact" [width]="120"></ngx-datatable-column>
-                <ngx-datatable-column name="Email" prop="mail" [width]="120"> </ngx-datatable-column>
+                <ngx-datatable-column name="Amount" prop="amount" [width]="120"> </ngx-datatable-column>
+                <ngx-datatable-column name="Order Status" prop="orderStatus" [width]="250"></ngx-datatable-column>
+                <ngx-datatable-column name="Payment Status" prop="paymentStatus" [width]="120"></ngx-datatable-column>
+                <ngx-datatable-column name="Payment Mode" prop="paymentType" [width]="120"> </ngx-datatable-column>
                 <ngx-datatable-column name="Actions" [width]="120" [sortable]="false">
                   <ng-template ngx-datatable-cell-template>
                     <div class="d-flex align-items-center">
@@ -347,7 +348,7 @@
                     <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                   </button>
-                  <button (click)="addOrder()" type="submit" class="btn btn-success btn-submit" rippleEffect>
+                  <button (click)="submitOrderForm()" type="submit" class="btn btn-success btn-submit" rippleEffect>
                     <span class="align-middle d-sm-inline-block d-none">Submit</span>
                     <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
                   </button>

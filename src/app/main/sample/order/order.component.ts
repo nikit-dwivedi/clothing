@@ -6,6 +6,7 @@ import { AdminService } from "app/services/admin.service";
 import { Subject } from "rxjs";
 import Stepper from "bs-stepper";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ToastrServiceService } from "app/services/toastrservice.service";
 
 @Component({
   selector: "app-order",
@@ -34,6 +35,9 @@ export class OrderComponent implements OnInit {
   public customerSelected = false;
   public dressList = [];
   customerList: any;
+
+  public orderTempList = [];
+  orderList: any;
 
   public customerMeasurementList = { 0: [] };
 
@@ -109,13 +113,13 @@ export class OrderComponent implements OnInit {
    * order modal
    */
   modalOpen(modalBasic) {
+    this.getAllCustomer();
     this.modalService.open(modalBasic, {
       centered: true,
       backdrop: "static",
       keyboard: true,
       size: "xl",
     });
-
     this.horizontalWizardStepper = new Stepper(document.querySelector("#stepper1"), {});
     this.bsStepper = document.querySelectorAll(".bs-stepper");
   }
@@ -125,6 +129,7 @@ export class OrderComponent implements OnInit {
    */
   customerListModalOpen(modalBasic) {
     this.customerSelected = false;
+    this.customerData = {}
     this.modalService.open(modalBasic, {
       centered: true,
       backdrop: "static",
@@ -174,7 +179,7 @@ export class OrderComponent implements OnInit {
    *
    */
 
-  constructor(private adminService: AdminService, private modalService: NgbModal, private fb: FormBuilder) {
+  constructor(private adminService: AdminService, private modalService: NgbModal, private fb: FormBuilder, private toster: ToastrServiceService) {
     this.accountDetailsForm = this.fb.group({
       name: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
@@ -306,10 +311,10 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllCustomer();
+    this.getOrderList();
     // content header
     this.contentHeader = {
-      headerTitle: "Customers",
+      headerTitle: "Orders",
       actionButton: true,
       breadcrumb: {
         type: "",
@@ -432,20 +437,49 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  addOrder() {
+  submitOrderForm() {
     // this.orderForm.value
     this.paymentFormSubmit = true;
     if (this.paymentForm.invalid) {
-      return
+      return;
     }
     this.paymentFormSubmit = false;
+    let customerDetail = this.customerSelected ? this.customerData : this.accountDetailsForm.value;
+    let { dressCollection } = this.orderForm.value;
+    let paymentData = this.paymentForm.value;
+    let bodyData = { customerDetail, dressCollection, paymentData };
+    this.addOrder(bodyData);
 
-    let userDetail = this.customerSelected ? this.customerData : this.accountDetailsForm.value;
-    let orderList = this.orderForm.value;
-    let paymentDetail = this.paymentForm.value;
-    console.log(orderList, "=======================", userDetail, "=======================", paymentDetail);
     //  let a =  this.dressCollectionControl.forEach((dress) => {
     //   return dress.value
     //   });
+  }
+
+  addOrder(bodyData: any) {
+    this.adminService.addNewOrder(bodyData).subscribe((data) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.getOrderList();
+      this.accountDetailsForm.reset();
+      this.orderForm.reset();
+      this.paymentForm.reset();
+    });
+  }
+
+  getOrderList() {
+    this.adminService.getAllOrders().subscribe((data) => {
+      if (!data.status) {
+        this.orderList = [];
+        this.orderTempList = this.orderList;
+        return;
+      }
+      this.orderList = data.items;
+      this.orderTempList = this.orderList;
+      this.kitchenSinkRows = this.orderList;
+    });
   }
 }

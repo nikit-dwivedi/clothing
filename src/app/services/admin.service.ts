@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class AdminService {
-  private baseUrl = "http://139.59.60.119:7089";
+  private baseUrl = "https://139.59.60.119:7889";
   constructor(private http: HttpClient) {}
 
   // token: any = JSON.parse(localStorage.getItem("authToken")).token;
@@ -80,6 +80,23 @@ export class AdminService {
       })
     );
   }
+
+  addNewOrder(bodyData: any, ): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/order`,bodyData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  getAllOrders(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + "/v1/order").pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   //   getSellersOutlet(sellerId: String): Observable<any> {
   //     // sellerId = "9e4b1001";
   //     return this.http.get<any>(this.baseUrl + `/v1/outlet/seller?sellerId=${sellerId}&mode=2`, this.httpOptions).pipe(
