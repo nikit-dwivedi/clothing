@@ -4,6 +4,9 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ColumnMode, DatatableComponent, SelectionType } from "@swimlane/ngx-datatable";
 import { AdminService } from "app/services/admin.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ToastrServiceService } from "app/services/toastrservice.service";
 
 @Component({
   selector: "app-customer",
@@ -29,7 +32,13 @@ export class CustomerComponent implements OnInit {
   public chkBoxSelected = [];
   public SelectionType = SelectionType;
   public customerTempList = [];
-  customerList: any;
+  public addCustomerForm: FormGroup;
+  addCustomerFormSubmit = false;
+
+  measurementTempList = [];
+  measurementList: any;
+  customerDetails = {};
+  customerData: any;
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
   @ViewChild("tableRowDetails") tableRowDetails: any;
@@ -123,7 +132,6 @@ export class CustomerComponent implements OnInit {
    * @param selected
    */
   onSelect({ selected }) {
-    console.log("Select Event", selected, this.selected);
 
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
@@ -135,7 +143,6 @@ export class CustomerComponent implements OnInit {
    * @param selected
    */
   onActivate(event) {
-    // console.log('Activate Event', event);
   }
 
   /**
@@ -148,12 +155,31 @@ export class CustomerComponent implements OnInit {
     this.chkBoxSelected.push(...selected);
   }
 
+  modalOpen(modalBasic, size) {
+    this.modalService.open(modalBasic, {
+      centered: true,
+      backdrop: "static",
+      keyboard: true,
+      size: size,
+    });
+  }
+
   /**
    * Constructor
    *
    */
-  constructor(private adminService: AdminService) {
+  constructor(private adminService: AdminService, private modalService: NgbModal, private fb: FormBuilder, private toster: ToastrServiceService) {
     this._unsubscribeAll = new Subject();
+    this.addCustomerForm = this.fb.group({
+      name: ["", Validators.required],
+      mail: ["", [Validators.required, Validators.email]],
+      contact: ["", [Validators.required, Validators.minLength(10)]],
+      altContact: ["", Validators.minLength(10)],
+    });
+  }
+
+  get addCustomerFormControls() {
+    return this.addCustomerForm.controls;
   }
 
   // Lifecycle Hooks
@@ -200,6 +226,70 @@ export class CustomerComponent implements OnInit {
       this.rows = data.items;
       this.tempData = this.rows;
       this.kitchenSinkRows = this.rows;
+    });
+  }
+
+  submitAddCustomerForm(isAdd: Boolean) {
+    this.addCustomerFormSubmit = true;
+    if (this.addCustomerForm.invalid) {
+      return;
+    }
+    this.addCustomerFormSubmit = false;
+    if (isAdd) {
+      this.addCustomer(this.addCustomerForm.value);
+    } else {
+      this.updateCustomer(this.customerData.customerId, this.addCustomerForm.value);
+    }
+  }
+
+  addCustomer(customerData: any) {
+    this.adminService.addCustomer(customerData).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.addCustomerForm.reset();
+      this.getAllCustomer();
+    });
+  }
+
+  updateCustomer(customerId: any, customerData: any) {
+    this.adminService.editCustomer(customerId, customerData).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.addCustomerForm.reset();
+      this.getAllCustomer();
+    });
+  }
+
+  getCustomerMeasurement(customerId: any) {
+    this.adminService.getAllCustomerMeasurement(customerId).subscribe((data: any) => {
+      if (!data.status) {
+        return;
+      }
+      this.measurementList = data.items;
+      this.measurementTempList = this.measurementList;
+    });
+  }
+
+  setCustomer(row: any, loadMeasurement: Boolean) {
+    this.customerData = row;
+    this.customerDetails = this.customerData;
+    if (loadMeasurement) {
+      this.getCustomerMeasurement(this.customerData.customerId);
+      return;
+    }
+    this.addCustomerForm.patchValue({
+      name: this.customerData.name,
+      mail: this.customerData.mail,
+      contact: this.customerData.contact,
+      altContact: this.customerData.altContact,
     });
   }
 }

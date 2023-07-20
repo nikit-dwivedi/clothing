@@ -45,19 +45,57 @@
                     </div>
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Amount" prop="amount" [width]="120"> </ngx-datatable-column>
-                <ngx-datatable-column name="Order Status" prop="orderStatus" [width]="250"></ngx-datatable-column>
-                <ngx-datatable-column name="Payment Status" prop="paymentStatus" [width]="120"></ngx-datatable-column>
-                <ngx-datatable-column name="Payment Mode" prop="paymentType" [width]="120"> </ngx-datatable-column>
+                <ngx-datatable-column name="Amount" prop="amount" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <div class="cell-line-height">
+                        <p class="font-medium-1 font-weight-bold line-height-1 mb-25">{{ name | currency : "₹" }}</p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Order Status" prop="orderStatus" [width]="130">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <div class="cell-line-height">
+                        <p class="font-medium-1 font-weight-bold line-height-1 mb-25" [ngClass]="getColor(name, 'orderStatus')">
+                          {{ name }}
+                        </p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Payment Status" prop="paymentStatus" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <div class="cell-line-height">
+                        <p class="font-medium-1 font-weight-bold line-height-1 mb-25" [ngClass]="getColor(name, 'paymentStatus')">
+                          {{ name }}
+                        </p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Payment Mode" prop="paymentType" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <div class="cell-line-height">
+                        <p class="font-medium-1 font-weight-bold line-height-1 mb-25" [ngClass]="getColor(name, 'paymentType')">
+                          {{ name }}
+                        </p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
                 <ngx-datatable-column name="Actions" [width]="120" [sortable]="false">
-                  <ng-template ngx-datatable-cell-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
                     <div class="d-flex align-items-center">
                       <div ngbDropdown container="body">
                         <a ngbDropdownToggle href="javascript:void(0);" class="hide-arrow" id="dropdownBrowserState" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i data-feather="more-vertical" class="text-primary cursor-pointer mr-50"></i>
                         </a>
                         <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
-                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Details</a>
+                          <a href="javascript:void(0)" (click)="measurementModalOpen(measurementDetail, row)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Details</a>
                           <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="archive" class="mr-50"></i> Archive</a>
                           <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
                         </div>
@@ -88,277 +126,276 @@
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
     <!-- <div class=""> -->
-      <div id="stepper1" class="bs-stepper" [ngClass]="setStepperColor()">
-        <div class="bs-stepper-header">
-          <div class="step" data-target="#account-details">
-            <button class="step-trigger">
-              <span class="bs-stepper-box">1</span>
-              <span class="bs-stepper-label">
-                <span class="bs-stepper-title">Customer Details</span>
-                <span class="bs-stepper-subtitle">Setup Customer Details</span>
-              </span>
-            </button>
-          </div>
-          <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
-          <div class="step" data-target="#personal-info">
-            <button class="step-trigger">
-              <span class="bs-stepper-box">2</span>
-              <span class="bs-stepper-label">
-                <span class="bs-stepper-title">Add Measurement</span>
-                <span class="bs-stepper-subtitle">Add Measurement Info</span>
-              </span>
-            </button>
-          </div>
-          <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
-          <div class="step" data-target="#address">
-            <button class="step-trigger">
-              <span class="bs-stepper-box">3</span>
-              <span class="bs-stepper-label">
-                <span class="bs-stepper-title">Payment</span>
-                <span class="bs-stepper-subtitle">Add Payment</span>
-              </span>
-            </button>
-          </div>
+    <div id="stepper1" class="bs-stepper" [ngClass]="setStepperColor()">
+      <div class="bs-stepper-header">
+        <div class="step" data-target="#account-details">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">1</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Customer Details</span>
+              <span class="bs-stepper-subtitle">Setup Customer Details</span>
+            </span>
+          </button>
         </div>
-        <div class="bs-stepper-content" >
-          <form (ngSubmit)="(HWForm.form.valid)" #HWForm="ngForm">
-            <!-- customer form -->
-            <div id="account-details" class="content">
-              <form [formGroup]="accountDetailsForm">
-                <div class="row">
-                  <div class="content-header col-md-6">
-                    <h5 class="mb-0">Customer Details</h5>
-                    <small class="text-muted">Enter Customer Details.</small>
-                  </div>
-                  <div class="content-header col-md-6 d-flex flex-md-row-reverse">
-                    <button type="button" (click)="customerListModalOpen(modalSLC)" class="btn btn-outline-primary tabs" [ngClass]="setStepperColor()" rippleEffect>Select Customer</button>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label class="form-label" for="name">Name</label>
-                    <input formControlName="name" id="name" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.name.errors && accountDetailsFormSubmit }" placeholder="johndoe" />
-                    <span *ngIf="accountDetailsControls.name.errors && accountDetailsFormSubmit" class="invalid-form">
-                      <small class="form-text text-danger" *ngIf="accountDetailsControls.name.errors.required">This field is required!</small>
-                    </span>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label class="form-label" for="email">Email</label>
-                    <input formControlName="email" id="email" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.email.errors && accountDetailsFormSubmit }" placeholder="john.doe@email.com" aria-label="john.doe" />
-                    <span *ngIf="accountDetailsControls.email.errors && accountDetailsFormSubmit" class="invalid-form">
-                      <small class="form-text text-danger" *ngIf="accountDetailsControls.email.errors.required">Email must be valid!</small>
-                    </span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group form-password-toggle col-md-6">
-                    <label class="form-label" for="contact">Contact</label>
-                    <input formControlName="contact" id="contact" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.contact.errors && accountDetailsFormSubmit }" placeholder="9999988888" />
-                    <div *ngIf="accountDetailsControls.contact.errors && accountDetailsFormSubmit" class="form-text text-danger">
-                      <small *ngIf="accountDetailsControls.contact.errors.required">Contact is required.</small>
-                    </div>
-                  </div>
-                  <div class="form-group form-password-toggle col-md-6">
-                    <label class="form-label" for="alternateContact">Alternate Contact</label>
-                    <input formControlName="alternateContact" id="alternateContact" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.alternateContact.errors && accountDetailsFormSubmit }" placeholder="9999988888" />
-                  </div>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <button (click)="horizontalWizardStepperPrevious()" class="btn btn-outline-secondary btn-prev" disabled rippleEffect>
-                    <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
-                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                  </button>
-                  <button (click)="horizontalWizardStepperNext(accountDetailsForm, 'account')" type="submit" class="btn btn-primary btn-next" rippleEffect>
-                    <span class="align-middle d-sm-inline-block d-none">Next</span>
-                    <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
-                  </button>
-                </div>
-              </form>
-            </div>
-            <!-- customer form -->
-
-            <!-- measurement form -->
-            <div id="personal-info" class="content">
-              <form [formGroup]="orderForm">
+        <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
+        <div class="step" data-target="#personal-info">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">2</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Add Measurement</span>
+              <span class="bs-stepper-subtitle">Add Measurement Info</span>
+            </span>
+          </button>
+        </div>
+        <div class="line"><i data-feather="chevron-right" class="font-medium-2"></i></div>
+        <div class="step" data-target="#address">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">3</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Payment</span>
+              <span class="bs-stepper-subtitle">Add Payment</span>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="bs-stepper-content">
+        <form (ngSubmit)="(HWForm.form.valid)" #HWForm="ngForm">
+          <!-- customer form -->
+          <div id="account-details" class="content">
+            <form [formGroup]="accountDetailsForm">
+              <div class="row">
                 <div class="content-header col-md-6">
-                  <h5 class="mb-0">Order Details</h5>
-                  <small class="text-muted">Enter Order Details.</small>
+                  <h5 class="mb-0">Customer Details</h5>
+                  <small class="text-muted">Enter Customer Details.</small>
                 </div>
-                <div formArrayName="dressCollection">
-                  <div *ngFor="let dressDetail of dressCollectionControl; let ind = index" @heightIn>
-                    <ng-container [formGroupName]="ind">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="form-group mb-2"></div>
-                        </div>
-                        <div class="col-12">
-                          <div class="form-group mb-2">
-                            <label for="configIdList">Dress</label>
-                            <ng-select [items]="dressList" formControlName="dressId" bindLabel="name" (change)="onDressChange($event, ind)" bindValue="dressId">
-                              <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                                <span class="ng-value-label"> {{ item.name }}</span>
-                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-                              </ng-template>
-                            </ng-select>
-                            <div *ngIf="measurementFormSubmit && getIndividualDressController(ind).dressId.errors" class="form-text text-danger">
-                              <small *ngIf="getIndividualDressController(ind).dressId.errors.required">Please Choose a Dress</small>
-                            </div>
-                          </div>
-                          <div class="form-group mb-2" *ngIf="customerMeasurementList[ind] && customerMeasurementList[ind][0]">
-                            <label for="configIdList">Measurement List</label>
-                            <ng-select [items]="customerMeasurementList[ind]" (change)="patchMeasurementDetails($event, ind)" bindLabel="tag">
-                              <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                                <span class="ng-value-label"> {{ item.tag }}</span>
-                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-                              </ng-template>
-                            </ng-select>
-                          </div>
-                          <div formArrayName="configList" class="row">
-                            <div *ngFor="let configDetail of getConfigControls(ind); let i = index" class="dress-detail">
-                              <ng-container [formGroupName]="i">
-                                <div class="form-group col-10">
-                                  <label class="form-label">{{ configDetail.value.name }}</label>
-                                  <input formControlName="value" type="text" class="form-control" [readOnly]="isDisable[ind]" [ngClass]="{ 'is-invalid': measurementFormSubmit && configDetail.controls.value.errors }" />
-                                  <div *ngIf="measurementFormSubmit && configDetail.controls.value.errors" class="form-text text-danger">
-                                    <small *ngIf="configDetail.controls.value.errors.required">{{ configDetail.value.name }} is Required</small>
-                                  </div>
-                                </div>
-                              </ng-container>
-                            </div>
-                            
-                          </div>
-                          <div class="row">
-                            <div class="form-group col-md-4">
-                              <label class="form-label" for="tag">description</label>
-                              <input formControlName="description" id="description" class="form-control" />
-                            </div>
-                            <div class="form-group col-md-4">
-                              <label class="form-label" for="tag">Tag</label>
-                              <input formControlName="tag" id="tag" class="form-control" [ngClass]="{ 'is-invalid': getIndividualDressController(ind).tag.errors && measurementFormSubmit }"/>
-                              <div *ngIf="getIndividualDressController(ind).tag.errors && measurementFormSubmit" class="form-text text-danger">
-                                <small *ngIf="getIndividualDressController(ind).tag.errors.required">Tag is required.</small>
-                              </div>
-                            </div>
-                            <div class="d-flex align-items-end col-md-2 col-12 mb-100" *ngIf="ind != 0">
-                              <div class="form-group">
-                                <button (click)="removeDressFromOrder(ind)" class="btn btn-outline-danger tabs text-nowrap px-1" [ngClass]="setStepperColor()"  rippleEffect>
-                                  <i data-feather="trash-2" class="align-middle mr-sm-25 mr-0"></i>
-                                  <span class="align-middle d-sm-inline-block d-none">Delete</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ng-container>
-                    <hr />
-                  </div>
-                  <div class="d-flex flex-row-reverse mb-2">
-                    <button (click)="addDressToOrder()" class="btn btn-outline-primary tabs" [ngClass]="setStepperColor()" rippleEffect>
-                      <i data-feather="plus" class="align-middle mr-sm-25 mr-0"></i>
-                      <span class="align-middle d-sm-inline-block d-none">Add Another Dress</span>
-                    </button>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <button (click)="horizontalWizardStepperPrevious()" class="btn btn-outline-secondary btn-prev" rippleEffect>
-                      <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
-                      <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                    </button>
-                    <button (click)="horizontalWizardStepperNext(orderForm, 'measurement')" type="submit" class="btn btn-primary btn-next" rippleEffect>
-                      <span class="align-middle d-sm-inline-block d-none">Next</span>
-                      <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <!-- measurement form -->
-
-            <!-- payment form -->
-            <div id="address" class="content">
-              <div class="content-header">
-                <h5 class="mb-0">Order Details</h5>
-                <div class="d-flex justify-content-center">
-                  <div class="order-card ml-4" *ngFor="let order of dressCollectionControl; let ind = index">
-                    <div class="order-pricing-block-content">
-                      <p class="order-pricing-plan">Measurement</p>
-                      <div class="order-price-value">
-                        <div id="order-priceDiscountCent">{{ order.value.dressName }}</div>
-                      </div>
-                      <ul class="order-check-list">
-                        <li class="order-check-list-item" *ngFor="let config of getConfigControls(ind); let i = index">{{ config.value.name }} - {{ config.value.value }}</li>
-                      </ul>
-                    </div>
-                  </div>
+                <div class="content-header col-md-6 d-flex flex-md-row-reverse">
+                  <button type="button" (click)="customerListModalOpen(modalSLC)" class="btn btn-outline-primary tabs" [ngClass]="setStepperColor()" rippleEffect>Select Customer</button>
                 </div>
               </div>
-              <form [formGroup]="paymentForm">
-                <div class="row">
-                  <div class="content-header col-md-6">
-                    <h5 class="mb-0">Payment Details</h5>
-                    <small class="text-muted">Enter Payment Details.</small>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="form-label" for="name">Name</label>
+                  <input formControlName="name" id="name" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.name.errors && accountDetailsFormSubmit }" placeholder="johndoe" />
+                  <span *ngIf="accountDetailsControls.name.errors && accountDetailsFormSubmit" class="invalid-form">
+                    <small class="form-text text-danger" *ngIf="accountDetailsControls.name.errors.required">This field is required!</small>
+                  </span>
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="form-label" for="mail">Email</label>
+                  <input formControlName="mail" id="mail" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.mail.errors && accountDetailsFormSubmit }" placeholder="john.doe@email.com" aria-label="john.doe" />
+                  <span *ngIf="accountDetailsControls.mail.errors && accountDetailsFormSubmit" class="invalid-form">
+                    <small class="form-text text-danger" *ngIf="accountDetailsControls.mail.errors.required">Email must be valid!</small>
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group form-password-toggle col-md-6">
+                  <label class="form-label" for="contact">Contact</label>
+                  <input formControlName="contact" id="contact" class="form-control" [ngClass]="{ 'is-invalid': accountDetailsControls.contact.errors && accountDetailsFormSubmit }" placeholder="9999988888" />
+                  <div *ngIf="accountDetailsControls.contact.errors && accountDetailsFormSubmit" class="form-text text-danger">
+                    <small *ngIf="accountDetailsControls.contact.errors.required">Contact is required.</small>
                   </div>
                 </div>
-                <div class="row d-flex justify-content-center">
-                  <div class="form-group col-md-2">
-                    <label class="form-label" for="amount">Amount</label>
-                    <input type="number" formControlName="amount" id="amount" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.amount.errors && paymentFormSubmit }"/>
-                    <div *ngIf="paymentControls.amount.errors && paymentFormSubmit" class="form-text text-danger">
-                      <small *ngIf="paymentControls.amount.errors.required">Amount is required.</small>
-                    </div>
-                  </div>
-                  <div class="form-group col-2">
-                    <div class="container">
-                      <label class="form-label" for="paymentStatus">Payment Status</label>
-                      <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
-                        <input formControlName="paymentStatus" class="form-check-input form-control" value="Paid" type="radio" id="radio-1" checked />
-                        <label class="tab form-check-label" for="radio-1">Paid</label>
-                        <input formControlName="paymentStatus" class="form-check-input form-control" value="pending" type="radio" id="radio-2" />
-                        <label class="tab form-check-label" for="radio-2">Unpaid</label>
-                        <span class="glider"></span>
+                <div class="form-group form-password-toggle col-md-6">
+                  <label class="form-label" for="altContact">Alternate Contact</label>
+                  <input formControlName="altContact" id="altContact" class="form-control" placeholder="9999988888" />
+                </div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button (click)="horizontalWizardStepperPrevious()" class="btn btn-outline-secondary btn-prev" disabled rippleEffect>
+                  <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                  <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                </button>
+                <button (click)="horizontalWizardStepperNext(accountDetailsForm, 'account')" type="submit" class="btn btn-primary btn-next" rippleEffect>
+                  <span class="align-middle d-sm-inline-block d-none">Next</span>
+                  <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+          <!-- customer form -->
+
+          <!-- measurement form -->
+          <div id="personal-info" class="content">
+            <form [formGroup]="orderForm">
+              <div class="content-header col-md-6">
+                <h5 class="mb-0">Order Details</h5>
+                <small class="text-muted">Enter Order Details.</small>
+              </div>
+              <div formArrayName="dressCollection">
+                <div *ngFor="let dressDetail of dressCollectionControl; let ind = index" @heightIn>
+                  <ng-container [formGroupName]="ind">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group mb-2"></div>
+                      </div>
+                      <div class="col-12">
+                        <div class="form-group mb-2">
+                          <label for="configIdList">Dress</label>
+                          <ng-select [items]="dressList" formControlName="dressId" bindLabel="name" (change)="onDressChange($event, ind)" bindValue="dressId">
+                            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                              <span class="ng-value-label"> {{ item.name }}</span>
+                              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </ng-template>
+                          </ng-select>
+                          <div *ngIf="measurementFormSubmit && getIndividualDressController(ind).dressId.errors" class="form-text text-danger">
+                            <small *ngIf="getIndividualDressController(ind).dressId.errors.required">Please Choose a Dress</small>
+                          </div>
+                        </div>
+                        <div class="form-group mb-2" *ngIf="customerMeasurementList[ind] && customerMeasurementList[ind][0]">
+                          <label for="configIdList">Measurement List</label>
+                          <ng-select [items]="customerMeasurementList[ind]" (change)="patchMeasurementDetails($event, ind)" bindLabel="tag">
+                            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                              <span class="ng-value-label"> {{ item.tag }}</span>
+                              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                        <div formArrayName="configList" class="row">
+                          <div *ngFor="let configDetail of getConfigControls(ind); let i = index" class="dress-detail">
+                            <ng-container [formGroupName]="i">
+                              <div class="form-group col-10">
+                                <label class="form-label">{{ configDetail.value.name }}</label>
+                                <input formControlName="value" type="text" class="form-control" [readOnly]="isDisable[ind]" [ngClass]="{ 'is-invalid': measurementFormSubmit && configDetail.controls.value.errors }" />
+                                <div *ngIf="measurementFormSubmit && configDetail.controls.value.errors" class="form-text text-danger">
+                                  <small *ngIf="configDetail.controls.value.errors.required">{{ configDetail.value.name }} is Required</small>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="form-group col-md-4">
+                            <label class="form-label" for="tag">description</label>
+                            <input formControlName="description" id="description" class="form-control" />
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label class="form-label" for="tag">Tag</label>
+                            <input formControlName="tag" id="tag" class="form-control" [ngClass]="{ 'is-invalid': getIndividualDressController(ind).tag.errors && measurementFormSubmit }" />
+                            <div *ngIf="getIndividualDressController(ind).tag.errors && measurementFormSubmit" class="form-text text-danger">
+                              <small *ngIf="getIndividualDressController(ind).tag.errors.required">Tag is required.</small>
+                            </div>
+                          </div>
+                          <div class="d-flex align-items-end col-md-2 col-12 mb-100" *ngIf="ind != 0">
+                            <div class="form-group">
+                              <button (click)="removeDressFromOrder(ind)" class="btn btn-outline-danger tabs text-nowrap px-1" [ngClass]="setStepperColor()" rippleEffect>
+                                <i data-feather="trash-2" class="align-middle mr-sm-25 mr-0"></i>
+                                <span class="align-middle d-sm-inline-block d-none">Delete</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <!-- <label class="form-label" for="paymentStatus">Payment Status</label>
-                    <input formControlName="paymentStatus" id="paymentStatus" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.paymentStatus.errors && paymentFormSubmit }" />
-                    <span *ngIf="paymentControls.paymentStatus.errors && paymentFormSubmit" class="invalid-form">
-                      <small class="form-text text-danger" *ngIf="paymentControls.paymentStatus.errors.required">This field is required!</small>
-                    </span> -->
-                  </div>
-                  <div class="form-group col-2" *ngIf="paymentControls.paymentStatus.value === 'Paid'">
-                    <div class="container">
-                      <label class="form-label" for="paymentType">Payment Mode</label>
-                      <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
-                        <input formControlName="paymentType" class="form-check-input form-control" value="cash" type="radio" id="radio-3" checked />
-                        <label class="tab form-check-label" for="radio-3">Cash</label>
-                        <input formControlName="paymentType" class="form-check-input form-control" value="online" type="radio" id="radio-4" />
-                        <label class="tab form-check-label" for="radio-4">Online</label>
-                        <span class="glider"></span>
-                      </div>
-                    </div>
-                    <!-- <label class="form-label" for="paymentType">Payment Mode</label>
-                    <input formControlName="paymentType" id="paymentType" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.paymentType.errors && paymentFormSubmit }" aria-label="john.doe" />
-                    <span *ngIf="paymentControls.paymentType.errors && paymentFormSubmit" class="invalid-form">
-                      <small class="form-text text-danger" *ngIf="paymentControls.paymentType.errors.required">Email must be valid!</small>
-                    </span> -->
-                  </div>
+                  </ng-container>
+                  <hr />
+                </div>
+                <div class="d-flex flex-row-reverse mb-2">
+                  <button (click)="addDressToOrder()" class="btn btn-outline-primary tabs" [ngClass]="setStepperColor()" rippleEffect>
+                    <i data-feather="plus" class="align-middle mr-sm-25 mr-0"></i>
+                    <span class="align-middle d-sm-inline-block d-none">Add Another Dress</span>
+                  </button>
                 </div>
                 <div class="d-flex justify-content-between">
                   <button (click)="horizontalWizardStepperPrevious()" class="btn btn-outline-secondary btn-prev" rippleEffect>
                     <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                   </button>
-                  <button (click)="submitOrderForm()" type="submit" class="btn btn-success btn-submit" rippleEffect>
-                    <span class="align-middle d-sm-inline-block d-none">Submit</span>
+                  <button (click)="horizontalWizardStepperNext(orderForm, 'measurement')" type="submit" class="btn btn-primary btn-next" rippleEffect>
+                    <span class="align-middle d-sm-inline-block d-none">Next</span>
                     <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
                   </button>
                 </div>
-              </form>
+              </div>
+            </form>
+          </div>
+          <!-- measurement form -->
+
+          <!-- payment form -->
+          <div id="address" class="content">
+            <div class="content-header">
+              <h5 class="mb-0">Order Details</h5>
+              <div class="d-flex justify-content-center">
+                <div class="order-card ml-4" *ngFor="let order of dressCollectionControl; let ind = index">
+                  <div class="order-pricing-block-content">
+                    <p class="order-pricing-plan">Measurement</p>
+                    <div class="order-price-value">
+                      <div id="order-priceDiscountCent">{{ order.value.dressName }}</div>
+                    </div>
+                    <ul class="order-check-list">
+                      <li class="order-check-list-item" *ngFor="let config of getConfigControls(ind); let i = index">{{ config.value.name }} - {{ config.value.value }}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- payment form -->
-          </form>
-        </div>
+            <form [formGroup]="paymentForm">
+              <div class="row">
+                <div class="content-header col-md-6">
+                  <h5 class="mb-0">Payment Details</h5>
+                  <small class="text-muted">Enter Payment Details.</small>
+                </div>
+              </div>
+              <div class="row d-flex justify-content-center">
+                <div class="form-group col-md-2">
+                  <label class="form-label" for="amount">Amount</label>
+                  <input type="number" formControlName="amount" id="amount" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.amount.errors && paymentFormSubmit }" />
+                  <div *ngIf="paymentControls.amount.errors && paymentFormSubmit" class="form-text text-danger">
+                    <small *ngIf="paymentControls.amount.errors.required">Amount is required.</small>
+                  </div>
+                </div>
+                <div class="form-group col-2">
+                  <div class="container">
+                    <label class="form-label" for="paymentStatus">Payment Status</label>
+                    <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
+                      <input formControlName="paymentStatus" class="form-check-input form-control" value="Paid" type="radio" id="radio-1" checked />
+                      <label class="tab form-check-label" for="radio-1">Paid</label>
+                      <input formControlName="paymentStatus" class="form-check-input form-control" value="pending" type="radio" id="radio-2" />
+                      <label class="tab form-check-label" for="radio-2">Unpaid</label>
+                      <span class="glider"></span>
+                    </div>
+                  </div>
+                  <!-- <label class="form-label" for="paymentStatus">Payment Status</label>
+                    <input formControlName="paymentStatus" id="paymentStatus" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.paymentStatus.errors && paymentFormSubmit }" />
+                    <span *ngIf="paymentControls.paymentStatus.errors && paymentFormSubmit" class="invalid-form">
+                      <small class="form-text text-danger" *ngIf="paymentControls.paymentStatus.errors.required">This field is required!</small>
+                    </span> -->
+                </div>
+                <div class="form-group col-2" *ngIf="paymentControls.paymentStatus.value === 'Paid'">
+                  <div class="container">
+                    <label class="form-label" for="paymentType">Payment Mode</label>
+                    <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
+                      <input formControlName="paymentType" class="form-check-input form-control" value="cash" type="radio" id="radio-3" checked />
+                      <label class="tab form-check-label" for="radio-3">Cash</label>
+                      <input formControlName="paymentType" class="form-check-input form-control" value="online" type="radio" id="radio-4" />
+                      <label class="tab form-check-label" for="radio-4">Online</label>
+                      <span class="glider"></span>
+                    </div>
+                  </div>
+                  <!-- <label class="form-label" for="paymentType">Payment Mode</label>
+                    <input formControlName="paymentType" id="paymentType" class="form-control" [ngClass]="{ 'is-invalid': paymentControls.paymentType.errors && paymentFormSubmit }" aria-label="john.doe" />
+                    <span *ngIf="paymentControls.paymentType.errors && paymentFormSubmit" class="invalid-form">
+                      <small class="form-text text-danger" *ngIf="paymentControls.paymentType.errors.required">Email must be valid!</small>
+                    </span> -->
+                </div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button (click)="horizontalWizardStepperPrevious()" class="btn btn-outline-secondary btn-prev" rippleEffect>
+                  <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                  <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                </button>
+                <button (click)="submitOrderForm()" type="submit" class="btn btn-success btn-submit" rippleEffect>
+                  <span class="align-middle d-sm-inline-block d-none">Submit</span>
+                  <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+          <!-- payment form -->
+        </form>
       </div>
+    </div>
     <!-- </div> -->
   </div>
 </ng-template>
@@ -417,3 +454,97 @@
   </ng-template>
   <!-- / Modal -->
 </div>
+
+<!-- add Modal -->
+<ng-template #measurementDetail let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Order Detail</h4>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="content-wrapper container-xxl p-0">
+      <div class="content-body">
+        <div class="row match-height">
+          <!-- measurement Card -->
+          <div class="col-lg-4 col-md-6 col-12" *ngFor="let item of orderTempDetails.dressList">
+            <div class="card card-profile">
+              <div class="card-body">
+                <!-- <div class="profile-image-wrapper">
+                  <div class="profile-image">
+                    <div class="avatar">
+                      <img src="assets/images/portrait/small/avatar-s-9.jpg" alt="Profile Picture" />
+                    </div>
+                  </div>
+                </div> -->
+                <h3>{{ item.dressId.name }}</h3>
+                <h6 class="text-muted">{{ item.description }}</h6>
+                <div class="badge badge-light-primary profile-badge">{{ item.tag }}</div>
+                <hr class="mb-2" />
+                <div class="card card-transaction">
+                  <div class="card-header">
+                    <h4 class="card-title">Transactions</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="transaction-item" *ngFor="let config of item.configList">
+                      <div class="media">
+                        <div class="avatar bg-light-primary rounded">
+                          <div class="avatar-content">
+                            <i data-feather="pocket" class="avatar-icon font-medium-3"></i>
+                          </div>
+                        </div>
+                        <div class="media-body">
+                          <h6 class="transaction-title">{{ config.configId.name }}</h6>
+                          <!-- <small>{{ config }}</small> -->
+                        </div>
+                      </div>
+                      <div class="font-weight-bolder text-success">{{ config.value }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /measurement card -->
+        </div>
+        <hr />
+        <div class="row match-height">
+          <div class="col-lg-6 col-md-6 mb-2">
+            <label for="amount">Amount</label>
+            <div class="d-flex justify-content-center align-items-center badge badge-pill badge-light-dark">
+              <div>
+                <h6 class="font-weight-bolder">{{ orderTempDetails.amount }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 mb-2">
+            <label for="orderStatus">Order Status</label>
+            <div class="d-flex justify-content-center align-items-center badge badge-pill" [ngClass]="getColorInDetails('orderStatus', orderTempDetails.orderStatus)" id="orderStatus">
+              <div>
+                <h6 class="font-weight-bolder">{{ orderTempDetails.orderStatus }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 mb-2">
+            <label for="paymentStatus">Payment Status</label>
+            <div class="d-flex justify-content-center align-items-center badge badge-pill" [ngClass]="getColorInDetails('paymentStatus', orderTempDetails.paymentStatus)" id="paymentStatus">
+              <div>
+                <h6 class="font-weight-bolder">{{ orderTempDetails.paymentStatus }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 mb-2">
+            <label for="paymentType">Payment Mode</label>
+            <div class="d-flex justify-content-center align-items-center badge badge-pill" [ngClass]="getColorInDetails('paymentType', orderTempDetails.paymentType)" id="paymentType">
+              <div>
+                <h6 class="font-weight-bolder">{{ orderTempDetails.paymentType }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- / Modal -->

@@ -29,6 +29,9 @@ export class OrderComponent implements OnInit {
   public expanded = {};
   public SelectionType = SelectionType;
 
+  public orderTempDetails = {};
+  orderDetails: any;
+
   public customerTempList = [];
   public customerDummyList = [];
   public customerData: any = {};
@@ -129,7 +132,7 @@ export class OrderComponent implements OnInit {
    */
   customerListModalOpen(modalBasic) {
     this.customerSelected = false;
-    this.customerData = {}
+    this.customerData = {};
     this.modalService.open(modalBasic, {
       centered: true,
       backdrop: "static",
@@ -139,6 +142,19 @@ export class OrderComponent implements OnInit {
         this.patchCustomerDetails();
         return true;
       },
+    });
+  }
+
+  measurementModalOpen(modalBasic, row) {
+    this.orderDetails = row;
+    this.orderTempDetails = this.orderDetails;
+    this.customerSelected = false;
+    this.customerData = {};
+    this.modalService.open(modalBasic, {
+      centered: true,
+      backdrop: "static",
+      keyboard: true,
+      size: "xl",
     });
   }
 
@@ -182,9 +198,9 @@ export class OrderComponent implements OnInit {
   constructor(private adminService: AdminService, private modalService: NgbModal, private fb: FormBuilder, private toster: ToastrServiceService) {
     this.accountDetailsForm = this.fb.group({
       name: ["", Validators.required],
-      email: ["", [Validators.required, Validators.email]],
+      mail: ["", [Validators.required, Validators.email]],
       contact: ["", [Validators.required, Validators.minLength(10)]],
-      alternateContact: ["", Validators.minLength(10)],
+      altContact: ["", Validators.minLength(10)],
     });
 
     this.orderForm = this.fb.group({
@@ -405,13 +421,9 @@ export class OrderComponent implements OnInit {
         measurementForm.patchValue({
           value: patchMap.get(id),
         });
-        // measurementForm.get("value").setValue(patchMap.get(id));
         this.isDisable[index] = true;
-        // console.log("=======",this.measurementForm.get("configList").value);
-        // measurementForm.get("value").disable({ emitEvent: true });
       } else {
         this.isDisable[index] = false;
-        // measurementForm.get("value").enable();
       }
     });
   }
@@ -481,5 +493,74 @@ export class OrderComponent implements OnInit {
       this.orderTempList = this.orderList;
       this.kitchenSinkRows = this.orderList;
     });
+  }
+
+  getColor(value: any, type: any) {
+    switch (type) {
+      case "orderStatus":
+        switch (value) {
+          case "pending":
+            return "bg-light-danger";
+          case "in progress":
+            return "bg-light-warning";
+          case "in progress":
+            return "bg-light-success";
+        }
+        return;
+      case "paymentStatus":
+        switch (value) {
+          case "pending":
+            return "bg-light-danger";
+          case "Paid":
+            return "bg-light-success";
+        }
+        return;
+      case "paymentType":
+        switch (value) {
+          case "cash":
+            return "bg-light-info";
+          case "online":
+            return "bg-light-success";
+        }
+        return;
+    }
+
+    // return {
+    //   "bg-light-danger": row.orderStatus == "pending",
+    //   "bg-light-success": row.status == "2",
+    //   // "bg-light-danger": row.status == "3",
+    //   "bg-light-warning": row.status == "4",
+    //   "bg-light-info": row.status == "5",
+    // };
+  }
+  getColorInDetails(type: any, value: any) {
+    switch (type) {
+      case "orderStatus":
+        switch (value) {
+          case "pending":
+            return "badge-light-danger";
+          case "in progress":
+            return "badge-light-warning";
+          case "in progress":
+            return "badge-light-success";
+        }
+        return;
+      case "paymentStatus":
+        switch (value) {
+          case "pending":
+            return "badge-light-danger";
+          case "Paid":
+            return "badge-light-success";
+        }
+        return;
+      case "paymentType":
+        switch (value) {
+          case "cash":
+            return "badge-light-info";
+          case "online":
+            return "badge-light-success";
+        }
+        return;
+    }
   }
 }

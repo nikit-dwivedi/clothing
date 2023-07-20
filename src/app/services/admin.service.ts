@@ -65,6 +65,21 @@ export class AdminService {
     );
   }
 
+  addCustomer(customerData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + "/v1/customer", customerData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+  editCustomer(customerId: any, customerData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/customer/${customerId}`, customerData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   getAllCustomerList(): Observable<any> {
     return this.http.get<any>(this.baseUrl + "/v1/customer").pipe(
       map((data: any) => {
@@ -81,8 +96,16 @@ export class AdminService {
     );
   }
 
-  addNewOrder(bodyData: any, ): Observable<any> {
-    return this.http.post<any>(this.baseUrl + `/v1/order`,bodyData).pipe(
+  getAllCustomerMeasurement(customerId: any): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/measurement/customer/${customerId}`).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  addNewOrder(bodyData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/order`, bodyData).pipe(
       map((data: any) => {
         return data;
       })

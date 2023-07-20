@@ -10,8 +10,6 @@ export class ToastrServiceService {
     // this.options = this.toastr.toastrConfig;
   }
   showSuccess(message: any, title: any) {    
-    console.log("=====>",message);
-    
     this.toastr.success(message, title)
   }
 
