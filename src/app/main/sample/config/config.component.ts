@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AdminService } from "app/services/admin.service";
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { ToastrServiceService } from "app/services/toastrservice.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-config",
@@ -14,6 +15,8 @@ export class ConfigComponent implements OnInit {
   measurementConfigList: any;
   measurementConfigForm: FormGroup;
 
+  public configId = "";
+
   public dressTempList = [];
   public DSubmitted = false;
   public selectedMeasurement = [];
@@ -24,7 +27,7 @@ export class ConfigComponent implements OnInit {
   public selectCustomHeaderFooterSelected = [];
   public idList = [];
 
-  constructor(private adminService: AdminService, private fb: FormBuilder, private toster: ToastrServiceService) {
+  constructor(private adminService: AdminService, private fb: FormBuilder, private toster: ToastrServiceService, private modalService: NgbModal) {
     this.measurementConfigForm = this.fb.group({
       name: ["", Validators.required],
       isUnit: [false, Validators.required],
@@ -43,6 +46,21 @@ export class ConfigComponent implements OnInit {
 
   get DControls() {
     return this.dressForm.controls;
+  }
+
+  modalOpen(modalBasic, row) {
+    this.configId = row.configId;
+    this.modalService.open(modalBasic, {
+      centered: true,
+      backdrop: "static",
+      keyboard: true,
+      size: "sm",
+    });
+    this.measurementConfigForm.patchValue({
+      name: row.name,
+      isUnit: Boolean(row.isUnit),
+      unit: row.unit,
+    });
   }
 
   // -------------------lifecycle------------------- //
@@ -71,6 +89,29 @@ export class ConfigComponent implements OnInit {
         return;
       }
       this.toster.showSuccess(data.message, "success");
+      this.getMeasurementConfig();
+    });
+  }
+
+  updateMeasurementConfig() {
+    this.mCSubmitted = true;
+    if (this.measurementConfigForm.invalid) {
+      return;
+    }
+    const reqBody = {
+      name: this.measurementConfigForm.value.name,
+      unit: this.measurementConfigForm.value.unit,
+      isUnit: this.measurementConfigForm.value.isUnit,
+    };
+    this.mCSubmitted = false;
+    this.adminService.editMeasurementConfig(this.configId, reqBody).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.measurementConfigForm.reset();
       this.getMeasurementConfig();
     });
   }
@@ -129,22 +170,22 @@ export class ConfigComponent implements OnInit {
     const configIdListFormArray = this.dressForm.get("configIdList") as FormArray;
     configIdListFormArray.clear();
     this.idList.forEach((id) => configIdListFormArray.push(this.fb.control(id)));
-      if (this.dressForm.invalid) {
+    if (this.dressForm.invalid) {
+      return;
+    }
+    const reqBody = {
+      name: this.dressForm.value.name,
+      configIdList: this.dressForm.value.configIdList,
+    };
+    this.DSubmitted = false;
+    this.adminService.addDress(reqBody).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
         return;
       }
-      const reqBody = {
-        name: this.dressForm.value.name,
-        configIdList: this.dressForm.value.configIdList,
-      };
-      this.DSubmitted = false;
-      this.adminService.addDress(reqBody).subscribe((data: any) => {
-        if (!data.status) {
-          this.toster.showError(data.message, "Error");
-          return;
-        }
-        this.toster.showSuccess(data.message, "success");
-        this.getDress();
-      });
+      this.toster.showSuccess(data.message, "success");
+      this.getDress();
+    });
   }
 
   // setupConfigIdList() {

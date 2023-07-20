@@ -49,6 +49,14 @@ export class AdminService {
     );
   }
 
+  editMeasurementConfig(configId: any, measurementData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/config/measurement/${configId}`, measurementData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   getAllDressList(): Observable<any> {
     return this.http.get<any>(this.baseUrl + "/v1/config/dress").pipe(
       map((data: any) => {
