@@ -25,7 +25,7 @@
                     </div>
                     <div class="media-body my-auto">
                       <h4 class="font-weight-bolder mb-0">Sales</h4>
-                      <p class="card-text font-small-3 mb-0">Sales</p>
+                      <p class="card-text font-small-3 mb-0">{{ saleCount }}</p>
                     </div>
                   </div>
                 </div>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="media-body my-auto">
                       <h4 class="font-weight-bolder mb-0">Customers</h4>
-                      <p class="card-text font-small-3 mb-0">Customers</p>
+                      <p class="card-text font-small-3 mb-0">{{ customerCount }}</p>
                     </div>
                   </div>
                 </div>
@@ -50,8 +50,8 @@
                       </div>
                     </div>
                     <div class="media-body my-auto">
-                      <h4 class="font-weight-bolder mb-0">Products</h4>
-                      <p class="card-text font-small-3 mb-0">Products</p>
+                      <h4 class="font-weight-bolder mb-0">Amount Pending</h4>
+                      <p class="card-text font-small-3 mb-0">{{ pendingAmount | currency : "₹" }}</p>
                     </div>
                   </div>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="media-body my-auto">
                       <h4 class="font-weight-bolder mb-0">Revenue</h4>
-                      <p class="card-text font-small-3 mb-0">Revenue</p>
+                      <p class="card-text font-small-3 mb-0">{{ revenueCount | currency : "₹" }}</p>
                     </div>
                   </div>
                 </div>
@@ -74,7 +74,7 @@
         </div>
       </div>
     </section>
-    
+
     <!-- Basic Alerts end -->
   </div>
 </div>

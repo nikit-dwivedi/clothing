@@ -136,6 +136,30 @@ export class AdminService {
     );
   }
 
+  ChangeOrderStatus(orderId: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/order/status/${orderId}`, null).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  ChangePaymentStatus(orderId: any, paymentMode: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/order/payment/${orderId}`, paymentMode).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  homePageState(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/home`).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   //   getSellersOutlet(sellerId: String): Observable<any> {
   //     // sellerId = "9e4b1001";
   //     return this.http.get<any>(this.baseUrl + `/v1/outlet/seller?sellerId=${sellerId}&mode=2`, this.httpOptions).pipe(

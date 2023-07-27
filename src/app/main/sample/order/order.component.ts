@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ColumnMode, DatatableComponent, SelectionType } from "@swimlane/ngx-datatable";
 import { repeaterAnimation } from "./order.animation";
 import { AdminService } from "app/services/admin.service";
@@ -51,6 +51,7 @@ export class OrderComponent implements OnInit {
   public accountDetailsFormSubmit = false;
   public measurementFormSubmit = false;
   public paymentFormSubmit = false;
+  public orderId;
 
   // private
   private horizontalWizardStepper: Stepper;
@@ -158,8 +159,9 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  paymentModalOpen(modalBasic) {
-    this.modalService.open(modalBasic, {
+  paymentModalOpen(modalBasic, orderId) {
+    this.orderId = orderId;
+    const modalRef: NgbModalRef = this.modalService.open(modalBasic, {
       centered: true,
       backdrop: "static",
       keyboard: true,
@@ -506,6 +508,26 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  changeStatusOfOrder(orderId: any) {
+    this.adminService.ChangeOrderStatus(orderId).subscribe((data) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.getOrderList();
+    });
+  }
+
+  changeStatusOfPayment(paymentType: any) {
+    this.adminService.ChangePaymentStatus(this.orderId, {paymentType}).subscribe((data) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.getOrderList();
+    });
+  }
+
   getTotalAmount() {
     let amount = 0;
     this.dressCollectionControl.forEach((dress) => {
@@ -522,7 +544,7 @@ export class OrderComponent implements OnInit {
             return "bg-light-danger";
           case "in progress":
             return "bg-light-warning";
-          case "in progress":
+          case "completed":
             return "bg-light-success";
         }
         return;

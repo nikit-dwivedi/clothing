@@ -96,8 +96,8 @@
                         </a>
                         <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
                           <a href="javascript:void(0)" (click)="measurementModalOpen(measurementDetail, row)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Details</a>
-                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" *ngIf="row.orderStatus != 'completed'"><i data-feather="zap" class="mr-50"></i> Change Order Status</a>
-                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="paymentModalOpen(paymentMode)"><i data-feather="credit-card" class="mr-50"></i> Change Payment Status</a>
+                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="changeStatusOfOrder(row.orderId)" *ngIf="row.orderStatus != 'completed'"><i data-feather="zap" class="mr-50"></i> Change Order Status</a>
+                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="paymentModalOpen(paymentMode, row.orderId)"><i data-feather="credit-card" class="mr-50"></i> Change Payment Status</a>
                         </div>
                       </div>
 
@@ -602,10 +602,10 @@
         </div>
       </div> -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')">Cash</button>
+        <button type="button" class="btn btn-primary" (click)="changeStatusOfPayment('cash'); modal.close('Accept click')">Cash</button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')">Online</button>
+        <button type="button" class="btn btn-primary" (click)="changeStatusOfPayment('online'); modal.close('Accept click')">Online</button>
       </div>
     </div>
   </div>

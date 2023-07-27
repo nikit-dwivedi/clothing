@@ -1,14 +1,20 @@
-import { Component, OnInit } from '@angular/core'
+import { AdminService } from "app/services/admin.service";
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(private adminService: AdminService) {}
 
-  public contentHeader: object
+  public contentHeader: object;
+
+  public customerCount: Number;
+  public saleCount: Number;
+  public revenueCount: Number;
+  public pendingAmount: Number;
 
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -17,19 +23,32 @@ export class HomeComponent implements OnInit {
    * On init
    */
   ngOnInit() {
+    this.homePageStateData();
     this.contentHeader = {
-      headerTitle: 'Home',
+      headerTitle: "Home",
       actionButton: true,
       breadcrumb: {
-        type: '',
+        type: "",
         links: [
           {
-            name: 'Home',
+            name: "Home",
             isLink: true,
-            link: '/'
-          }
-        ]
+            link: "/",
+          },
+        ],
+      },
+    };
+  }
+
+  homePageStateData() {
+    this.adminService.homePageState().subscribe((data) => {
+      if (!data.status) {
+        return;
       }
-    }
+      this.customerCount = data.items.customerCount;
+      this.saleCount = data.items.saleCount;
+      this.revenueCount = data.items.revenueCount;
+      this.pendingAmount = data.items.pendingAmount;
+    });
   }
 }
