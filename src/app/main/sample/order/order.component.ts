@@ -158,6 +158,15 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  paymentModalOpen(modalBasic) {
+    this.modalService.open(modalBasic, {
+      centered: true,
+      backdrop: "static",
+      keyboard: true,
+      size: "xs",
+    });
+  }
+
   // -------------------------------------------------table------------------------------------------------- //
 
   /**
@@ -498,9 +507,9 @@ export class OrderComponent implements OnInit {
   }
 
   getTotalAmount() {
-    let amount = 0
+    let amount = 0;
     this.dressCollectionControl.forEach((dress) => {
-      amount += dress.get("price").value
+      amount += dress.get("price").value;
     });
     return amount;
   }
@@ -551,7 +560,7 @@ export class OrderComponent implements OnInit {
             return "badge-light-danger";
           case "in progress":
             return "badge-light-warning";
-          case "in progress":
+          case "completed":
             return "badge-light-success";
         }
         return;
