@@ -116,7 +116,6 @@ export class OrderComponent implements OnInit {
    * order modal
    */
   modalOpen(modalBasic) {
-    this.getAllCustomer();
     this.modalService.open(modalBasic, {
       centered: true,
       backdrop: "static",
@@ -131,6 +130,7 @@ export class OrderComponent implements OnInit {
    * customer modal
    */
   customerListModalOpen(modalBasic) {
+    this.getAllCustomer();
     this.customerSelected = false;
     this.customerData = {};
     this.modalService.open(modalBasic, {
@@ -210,7 +210,7 @@ export class OrderComponent implements OnInit {
     this.paymentForm = this.fb.group({
       paymentStatus: ["pending", Validators.required],
       paymentType: ["cash", Validators.required],
-      amount: ["", Validators.required],
+      amountPaid: [0],
     });
 
     // -------------------------------------------------Forms------------------------------------------------- //
@@ -289,6 +289,7 @@ export class OrderComponent implements OnInit {
     return this.fb.group({
       dressId: ["", Validators.required],
       dressName: ["", Validators.required],
+      price: ["", Validators.required],
       measurementId: [""],
       configList: this.fb.array([], Validators.required),
       description: [""],
@@ -309,6 +310,7 @@ export class OrderComponent implements OnInit {
   onDressChange(selectedDress: any, index: any) {
     // Clear existing dress details
     this.getIndividualDress(index).controls.dressName.setValue(selectedDress.name);
+    this.getIndividualDress(index).controls.price.setValue(selectedDress.price);
     while (this.getConfigDetails(index).length !== 0) {
       this.getConfigDetails(index).removeAt(0);
     }
@@ -383,21 +385,21 @@ export class OrderComponent implements OnInit {
     if (this.customerSelected) {
       this.accountDetailsForm.patchValue({
         name: this.customerData.name,
-        email: this.customerData.mail,
+        mail: this.customerData.mail,
         contact: this.customerData.contact,
-        alternateContact: this.customerData.alternateContact,
+        altContact: this.customerData.altContact,
       });
       this.accountDetailsForm.get("name").disable();
-      this.accountDetailsForm.get("email").disable();
+      this.accountDetailsForm.get("mail").disable();
       this.accountDetailsForm.get("contact").disable();
-      this.accountDetailsForm.get("alternateContact").disable();
+      this.accountDetailsForm.get("altContact").disable();
 
       // Disable the text field
     } else {
       this.accountDetailsForm.get("name").enable();
-      this.accountDetailsForm.get("email").enable();
+      this.accountDetailsForm.get("mail").enable();
       this.accountDetailsForm.get("contact").enable();
-      this.accountDetailsForm.get("alternateContact").enable();
+      this.accountDetailsForm.get("altContact").enable();
     }
   }
 
@@ -493,6 +495,14 @@ export class OrderComponent implements OnInit {
       this.orderTempList = this.orderList;
       this.kitchenSinkRows = this.orderList;
     });
+  }
+
+  getTotalAmount() {
+    let amount = 0
+    this.dressCollectionControl.forEach((dress) => {
+      amount += dress.get("price").value
+    });
+    return amount;
   }
 
   getColor(value: any, type: any) {

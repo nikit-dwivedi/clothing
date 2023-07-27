@@ -1,6 +1,6 @@
 @import '@core/scss/angular/libs/form-wizard.component.scss';
 @import '@core/scss/angular/libs/select.component.scss';
-// @import '@core/scss/angular/libs/datatables.component.scss';
+@import '@core/scss/angular/libs/datatables.component.scss';
 
 
 
@@ -80,9 +80,10 @@ background-image: linear-gradient(315deg, #d0ae81 0%, #F7CE68 50%, #d0ae81 100%)
 // _________________________________________________________________________________________________________________________________ //
 
 .tabs {
-  display: flex;
+  // display: flex;
   position: relative;
   background-color: #fff; 
+  // min-width: 10rem;
   // box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.15), 0 6px 12px 0 rgba(0, 0, 0, 0.15);
   padding: 0.75rem;
@@ -92,6 +93,7 @@ background-image: linear-gradient(315deg, #d0ae81 0%, #F7CE68 50%, #d0ae81 100%)
 .tabs * {
   z-index: 2;
 }
+
 
 .container input[type="radio"] {
   display: none;
@@ -163,9 +165,80 @@ background-image: linear-gradient(315deg, #d0ae81 0%, #F7CE68 50%, #d0ae81 100%)
 }
 
 
-@media (max-width: 700px) {
- 
-  .tabs {
-    transform: scale(0.6);
+
+
+
+/* Other CSS styles (unchanged) */
+
+/* Media Query for responsiveness */
+@media screen and (max-width: 768px) {
+  /* Adjust the width and height of the .order-card for smaller screens */
+  .order-card {
+    width: 150px;
+    height: 200px;
+    padding: 0.8rem; /* Adjust padding for smaller cards */
   }
+
+  /* Adjust font size and line-height for smaller screens */
+  .order-pricing-plan,
+  .order-price-value {
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  /* Adjust font size for checklist items */
+  .order-check-list-item {
+    font-size: 0.9rem;
+  }
+
+  /* Adjust size and position of tabs for smaller screens */
+
+
+
+
+  .notification {
+    width: 0.6rem;
+    height: 0.6rem;
+    font-size: 8px;
+    top: 8px;
+    left: 25%;
+    margin-left: 0.5rem;
+  }
+
+ 
+}
+
+
+/* Media Query for mobile */
+@media screen and (max-width: 480px) {
+  /* Adjust the width and height of the .order-card for mobile screens */
+  .order-card {
+    width: 130px;
+    height: 180px;
+    padding: 0.6rem; /* Adjust padding for smaller cards */
+  }
+
+  /* Adjust font size and line-height for mobile screens */
+  .order-pricing-plan,
+  .order-price-value {
+    font-size: 0.9rem;
+    line-height: 1.1;
+  }
+
+  /* Adjust font size for checklist items on mobile screens */
+  .order-check-list-item {
+    font-size: 0.8rem;
+  }
+  
+
+  .notification {
+    width: 0.5rem;
+    height: 0.5rem;
+    font-size: 7px;
+    top: 6px;
+    left: 20%;
+    margin-left: 0.4rem;
+  }
+
+ 
 }

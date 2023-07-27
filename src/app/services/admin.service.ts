@@ -73,6 +73,14 @@ export class AdminService {
     );
   }
 
+  editDress(dressId: any, dressData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/config/dress/${dressId}`, dressData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   addCustomer(customerData: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + "/v1/customer", customerData).pipe(
       map((data: any) => {
