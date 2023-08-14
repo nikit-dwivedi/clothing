@@ -14,25 +14,30 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { FormsModule } from "@angular/forms";
 import { OrderComponent } from './order/order.component';
+import { AuthGuard } from "app/auth/helpers";
 
 const routes = [
   {
     path: "home",
+    canActivate: [AuthGuard],
     component: HomeComponent,
     data: { animation: "home" },
   },
   {
     path: "customer",
+    canActivate:[AuthGuard],
     component: CustomerComponent,
     data: { animation: "customer" },
   },
   {
     path: "order",
+    canActivate:[AuthGuard],
     component: OrderComponent,
     data: { animation: "order" },
   },
   {
     path: "config",
+    canActivate:[AuthGuard],
     component: ConfigComponent,
     data: { animation: "customer" },
   },

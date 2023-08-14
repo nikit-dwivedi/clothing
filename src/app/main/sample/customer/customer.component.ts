@@ -268,6 +268,18 @@ export class CustomerComponent implements OnInit {
     });
   }
 
+  removeCustomer(customerId: any) {
+    this.adminService.deleteCustomer(customerId).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.getAllCustomer();
+    });
+  }
+
   getCustomerMeasurement(customerId: any) {
     this.adminService.getAllCustomerMeasurement(customerId).subscribe((data: any) => {
       if (!data.status) {

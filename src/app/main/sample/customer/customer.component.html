@@ -58,7 +58,7 @@
                         <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
                           <a href="javascript:void(0)" (click)="setCustomer(row, true); modalOpen(measurementDetail, 'xl')" ngbDropdownItem class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Measurement Details</a>
                           <a href="javascript:void(0)" (click)="setCustomer(row, false); modalOpen(updateCustomer, 'l')" ngbDropdownItem class="d-flex align-items-center"><i data-feather="archive" class="mr-50"></i> Edit</a>
-                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
+                          <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="removeCustomer(row.customerId)"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
                         </div>
                       </div>
 
@@ -186,7 +186,7 @@
 </ng-template>
 <!-- / Modal -->
 
-<!-- add Modal -->
+<!-- detail Modal -->
 <ng-template #measurementDetail let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="myModalLabel1">Customer Detail</h4>

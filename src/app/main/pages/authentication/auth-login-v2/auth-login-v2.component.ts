@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
-import { CoreConfigService } from '@core/services/config.service';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { Router } from "@angular/router";
+import { CoreConfigService } from "@core/services/config.service";
+import { ToastrService } from "ngx-toastr";
+import { AdminService } from "app/services/admin.service";
 
 @Component({
-  selector: 'app-auth-login-v2',
-  templateUrl: './auth-login-v2.component.html',
-  styleUrls: ['./auth-login-v2.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: "app-auth-login-v2",
+  templateUrl: "./auth-login-v2.component.html",
+  styleUrls: ["./auth-login-v2.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AuthLoginV2Component implements OnInit {
   //  Public
@@ -19,9 +21,10 @@ export class AuthLoginV2Component implements OnInit {
   public loading = false;
   public submitted = false;
   public returnUrl: string;
-  public error = '';
+  public error = "";
   public passwordTextType: boolean;
-
+  private email = "admin@gmail.com";
+  private password = "admin@777";
   // Private
   private _unsubscribeAll: Subject<any>;
 
@@ -30,29 +33,24 @@ export class AuthLoginV2Component implements OnInit {
    *
    * @param {CoreConfigService} _coreConfigService
    */
-  constructor(
-    private _coreConfigService: CoreConfigService,
-    private _formBuilder: UntypedFormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: UntypedFormBuilder, private toaster: ToastrService, private _route: ActivatedRoute, private _router: Router, private adminService: AdminService) {
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
     this._coreConfigService.config = {
       layout: {
         navbar: {
-          hidden: true
+          hidden: true,
         },
         menu: {
-          hidden: true
+          hidden: true,
         },
         footer: {
-          hidden: true
+          hidden: true,
         },
         customizer: false,
-        enableLocalStorage: false
-      }
+        enableLocalStorage: false,
+      },
     };
   }
 
@@ -78,11 +76,21 @@ export class AuthLoginV2Component implements OnInit {
 
     // Login
     this.loading = true;
-
-    // redirect to home page
-    setTimeout(() => {
-      this._router.navigate(['/']);
-    }, 100);
+    this.adminService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe((data) => {
+      if (!data.status) {
+        localStorage.removeItem("token");
+        this.submitted = false;
+        this.loading = false;
+        this.toaster.error(data.message);
+        return;
+      }
+      localStorage.setItem("token", data.items);
+      // redirect to home page
+      setTimeout(() => {
+        this._router.navigate(["/"]);
+        this.toaster.success(data.message);
+      }, 100);
+    });
   }
 
   // Lifecycle Hooks
@@ -93,15 +101,19 @@ export class AuthLoginV2Component implements OnInit {
    */
   ngOnInit(): void {
     this.loginForm = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", Validators.required],
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this._route.snapshot.queryParams["returnUrl"] || "/";
+
+    if (localStorage.getItem("token")) {
+      this._router.navigate([this.returnUrl]);
+    }
 
     // Subscribe to config changes
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
+    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe((config) => {
       this.coreConfig = config;
     });
   }

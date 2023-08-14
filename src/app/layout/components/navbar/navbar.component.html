@@ -56,7 +56,7 @@
         <span class="avatar"><img class="round" src="../../../../assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40" /><span class="avatar-status-online"></span></span>
       </a>
       <div ngbDropdownMenu aria-labelledby="navbarUserDropdown" class="dropdown-menu dropdown-menu-right">
-        <a ngbDropdownItem [routerLink]="['/pages/authentication/login-v2']"><span [data-feather]="'power'" [class]="'mr-50'"></span> Logout</a>
+        <a ngbDropdownItem [routerLink]="['/pages/authentication/login-v2']" (click)="logout()"><span [data-feather]="'power'" [class]="'mr-50'"></span> Logout</a>
       </div>
     </li>
     <!--/ User Dropdown -->

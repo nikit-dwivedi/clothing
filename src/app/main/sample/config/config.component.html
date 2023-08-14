@@ -22,18 +22,23 @@
                     </a>
                     <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState2">
                       <a href="javascript:void(0)" ngbDropdownItem (click)="dressModalOpen(dressModal, dress)" class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Edit</a>
-                      <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
+                      <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="removeDress(dress.dressId)"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
                     </div>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="employee-task d-flex justify-content-between align-items-center" *ngFor="let config of dress.configIdList">
                     <div class="media">
-                      <div class="avatar mr-75">
-                        <img src="assets/images/icons/ruler.svg" class="rounded" width="42" height="42" alt="Avatar" />
+                      <div class="avatar bg-light-primary rounded">
+                        <div class="avatar-content">
+                          <i data-feather="pocket" class="avatar-icon font-medium-3"></i>
+                        </div>
                       </div>
+                      <!-- <div class="avatar mr-75">
+                        <img src="assets/images/icons/ruler.svg" class="rounded" width="42" height="42" alt="Avatar" />
+                      </div> -->
                       <div class="media-body my-auto">
-                        <h6 class="mb-0">{{ config.name }}</h6>
+                        <h6 class="mb-0 ml-1">{{ config.name }}</h6>
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
@@ -117,28 +122,35 @@
           <app-content-header [contentHeader]="contentHeader"></app-content-header>
           <div class="row match-height">
             <!-- Measurement List Card -->
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-12">
               <div class="card card-employee-task">
                 <div class="card-body">
                   <div class="employee-task justify-content-between align-items-center">
-                    <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let measurementConfig of measurementTempList">
-                        <span>
-                          {{ measurementConfig.name }}<br /><small>{{ measurementConfig.unit }}</small></span
-                        >
+                    <ul class="list-group d-flex flex-wrap list-group-horizontal">
+                        <li class="list-group-item" *ngFor="let measurementConfig of measurementTempList">
+                          <span>
+                            {{ measurementConfig.name }}<br /><small>{{ measurementConfig.unit }}</small></span
+                          >
+                          <!-- <div class="d-block">
+                            <div ngbDropdown class="text-primary cursor-pointer">
+                              <button class="btn" ngbDropdownToggle href="javascript:void(0);" id="dropdownBrowserState" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="badge bg-primary rounded-pill">more</i>
+                              </button>
+                              <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
+                                <a href="javascript:void(0)" ngbDropdownItem (click)="modalOpen(measurementConfigModal, measurementConfig)" class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Edit</a>
+                                <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="removeMeasurementConfig(measurementConfig.configId)"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
+                              </div>
+                            </div>
+                          </div> -->
+                          <div ngbDropdown class="dropdown d-flex align-items-end">
+                            <a ngbDropdownToggle class="btn btn-outline-primary dropdown-toggle"href="javascript:void(0);"  role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">more</a>
 
-                        <div class="">
-                          <div ngbDropdown>
-                            <a ngbDropdownToggle href="javascript:void(0);" id="dropdownBrowserState" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="text-primary cursor-pointer mr-50"></i>
-                            </a>
-                            <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
+                            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                               <a href="javascript:void(0)" ngbDropdownItem (click)="modalOpen(measurementConfigModal, measurementConfig)" class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Edit</a>
-                              <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
+                              <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="removeMeasurementConfig(measurementConfig.configId)"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
                             </div>
                           </div>
-                        </div>
-                      </li>
+                        </li>
                     </ul>
                   </div>
                 </div>
@@ -146,7 +158,7 @@
             </div>
             <!--/ Measurement List Card -->
             <!-- Measurement Add Card -->
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-12">
               <div class="card card-payment">
                 <div class="card-header">
                   <h4 class="card-title">Add Measurement</h4>
@@ -287,13 +299,12 @@
         <div class="col-12">
           <div class="form-group mb-2">
             <label for="configIdList">Measurement</label>
-            <ng-select [multiple]="true" [items]="measurementTempList" id="dressUpdate" (data)="compareFn($event)" (change)="onConfigIdListChangeUpdate($event)" [hideSelected]="true" formArrayName="configList" bindLabel="name" bindValue="configId" [ngClass]="{ error: DSubmitted && DControls.configIdList.errors }">
+            <ng-select [multiple]="true" [items]="measurementTempList" id="dressUpdate" [hideSelected]="true" [(ngModel)]="nameAndIdList" [ngModelOptions]="{ standalone: true }" bindLabel="name" [ngClass]="{ error: DSubmitted && DControls.configIdList.errors }">
               <ng-template ng-label-tmp let-item="item" let-clear="clear">
                 <span class="ng-value-label"> {{ item.name }}</span>
                 <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
               </ng-template>
             </ng-select>
-            <div class="badge badge-pill badge-light-secondary" *ngFor="let item of nameAndIdList">{{ item.name }}</div>
             <div *ngIf="DSubmitted && DControls.configIdList.errors" class="text-danger">
               <div *ngIf="DControls.configIdList.errors.required">Measurement is required</div>
             </div>

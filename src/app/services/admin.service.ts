@@ -24,8 +24,8 @@ export class AdminService {
   //   return { headers };
   // };
 
-  login(username: any, password: any): Observable<any> {
-    let bodyData = { username, password };
+  login(email: any, password: any): Observable<any> {
+    let bodyData = { email, password };
     return this.http.post<any>(this.baseUrl + "/v1/admin/login", bodyData).pipe(
       map((data: any) => {
         return data;
@@ -57,6 +57,14 @@ export class AdminService {
     );
   }
 
+  deleteMeasurementConfig(configId: any): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/config/measurement/remove/${configId}`).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   getAllDressList(): Observable<any> {
     return this.http.get<any>(this.baseUrl + "/v1/config/dress").pipe(
       map((data: any) => {
@@ -81,6 +89,14 @@ export class AdminService {
     );
   }
 
+  deleteDress(dressId: any): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/config/dress/remove/${dressId}`).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
   addCustomer(customerData: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + "/v1/customer", customerData).pipe(
       map((data: any) => {
@@ -90,6 +106,14 @@ export class AdminService {
   }
   editCustomer(customerId: any, customerData: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + `/v1/customer/${customerId}`, customerData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  deleteCustomer(customerId: any): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/customer/remove/${customerId}`).pipe(
       map((data: any) => {
         return data;
       })
