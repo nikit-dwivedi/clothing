@@ -116,7 +116,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- add Modal -->
 <ng-template #modalBasic let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
@@ -377,7 +377,7 @@
                   <label class="form-label" for="amountPaid">Amount Paid</label>
                   <input type="number" formControlName="amountPaid" id="amountPaid" class="form-control" />
                 </div>
-                <div class="form-group col-md-4 container">
+                <div class="form-group ml-0 col-md-4 container">
                   <p>Payment Status</p>
                   <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
                     <input formControlName="paymentStatus" class="form-check-input form-control" value="Paid" type="radio" id="radio-1" checked />
@@ -392,7 +392,7 @@
                       <small class="form-text text-danger" *ngIf="paymentControls.paymentStatus.errors.required">This field is required!</small>
                     </span> -->
                 </div>
-                <div class="form-group col-md-4 container" *ngIf="paymentControls.paymentStatus.value === 'Paid'">
+                <div class="form-group ml-0 col-md-4 container" *ngIf="paymentControls.paymentStatus.value === 'Paid'">
                   <p>Payment Mode</p>
                   <div class="tabs form-check form-check-inline" [ngClass]="setStepperColor()">
                     <input formControlName="paymentType" class="form-check-input form-control" value="cash" type="radio" id="radio-3" checked />
@@ -431,7 +431,7 @@
 
 <!-- Button trigger modal -->
 
-<!-- Modal -->
+<!-- customer list Modal -->
 <ng-template #modalSLC let-modal>
   <div class="scrolling-long-content">
     <div class="modal-header">
@@ -483,7 +483,7 @@
 </ng-template>
 <!-- / Modal -->
 
-<!-- add Modal -->
+<!-- detail Modal -->
 <ng-template #measurementDetail let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="myModalLabel1">Order Detail</h4>
