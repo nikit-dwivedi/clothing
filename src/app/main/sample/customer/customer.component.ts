@@ -108,7 +108,7 @@ export class CustomerComponent implements OnInit {
 
     // filter our data
     const temp = this.tempData.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.name.toLowerCase().indexOf(val) !== -1 || d.contact.toLowerCase().indexOf(val) !== -1 || d.mail.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
     // update the rows

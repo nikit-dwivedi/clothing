@@ -180,8 +180,9 @@ export class OrderComponent implements OnInit {
     const val = event.target.value.toLowerCase();
 
     // filter our data
-    const temp = this.tempData.filter(function (d) {
-      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
+    const temp = this.orderTempList.filter(function (d) {
+
+      return d.customerId.name.toLowerCase().indexOf(val) !== -1 || d.customerId.contact.toLowerCase().indexOf(val) !== -1 || d.customerId.mail.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
     // update the rows
@@ -519,7 +520,7 @@ export class OrderComponent implements OnInit {
   }
 
   changeStatusOfPayment(paymentType: any) {
-    this.adminService.ChangePaymentStatus(this.orderId, {paymentType}).subscribe((data) => {
+    this.adminService.ChangePaymentStatus(this.orderId, { paymentType }).subscribe((data) => {
       if (!data.status) {
         this.toster.showError(data.message, "Error");
       }
