@@ -323,6 +323,24 @@ export class ConfigComponent implements OnInit {
     this.getDress();
   }
 
+  onConfigIdListChange(select: any) {
+    console.log(select);
+
+    // const selectedOptions = Array.from(select.value)
+    this.nameAndIdList = select.map((element: any) => {
+      const { name, configId } = element;
+      return { name, configId };
+    });
+    this.idList = select.map((element: any) => {
+      return element.configId;
+    });
+
+    // this.selectedMeasurement = configIdListFormArray.getRawValue();
+    // selectedOptions.forEach((optionValue) => {
+    //   this.selectedMeasurement.includes(optionValue) ? configIdListFormArray.removeAt(this.selectedMeasurement.findIndex((id) => id == optionValue)) : configIdListFormArray.push(this.fb.control(optionValue));
+    // });
+  }
+
   addMeasurementConfig() {
     this.mCSubmitted = true;
     if (this.measurementConfigForm.invalid) {
@@ -434,10 +452,12 @@ export class ConfigComponent implements OnInit {
     const configIdListFormArray = this.dressForm.get("configIdList") as FormArray;
     configIdListFormArray.clear();
     this.idList.forEach((id) => configIdListFormArray.push(this.fb.control(id)));
+    console.log( this.idList);
     if (this.dressForm.invalid) {
       console.log(this.dressForm);
       return;
     }
+    
     const reqBody = {
       name: this.dressForm.value.name,
       configIdList: this.dressForm.value.configIdList,
