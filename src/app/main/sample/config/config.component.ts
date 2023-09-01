@@ -287,7 +287,7 @@ export class ConfigComponent implements OnInit {
     this.idList = dressData.configIdList.map((element: any) => {
       return element.configId;
     });
-    
+
     this.dressForm.patchValue({
       name: dressData.name,
       price: dressData.price,
@@ -437,7 +437,6 @@ export class ConfigComponent implements OnInit {
     });
   }
 
- 
   customHeaderFooterSelectAll() {
     this.selectCustomHeaderFooterSelected = this.selectCustomHeaderFooter.map((x) => x.name);
   }
@@ -452,12 +451,12 @@ export class ConfigComponent implements OnInit {
     const configIdListFormArray = this.dressForm.get("configIdList") as FormArray;
     configIdListFormArray.clear();
     this.idList.forEach((id) => configIdListFormArray.push(this.fb.control(id)));
-    console.log( this.idList);
+    console.log(this.idList);
     if (this.dressForm.invalid) {
       console.log(this.dressForm);
       return;
     }
-    
+
     const reqBody = {
       name: this.dressForm.value.name,
       configIdList: this.dressForm.value.configIdList,
@@ -486,6 +485,7 @@ export class ConfigComponent implements OnInit {
     const reqBody = {
       name: this.dressForm.value.name,
       configIdList: this.dressForm.value.configIdList,
+      price: this.dressForm.value.price,
     };
     this.DSubmitted = false;
     this.adminService.editDress(this.dressDetails.dressId, reqBody).subscribe((data: any) => {
