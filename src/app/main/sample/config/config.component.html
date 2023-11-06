@@ -202,6 +202,83 @@
       </div>
     </ng-template>
   </li>
+  <li ngbNavItem>
+    <a ngbNavLink>Material</a>
+    <ng-template let-row="row" ngbNavContent>
+      <div class="content-wrapper container-xxl p-0">
+        <div class="content-body">
+          <app-content-header [contentHeader]="contentHeader"></app-content-header>
+          <div class="row match-height">
+            <!-- Measurement List Card -->
+            <div class="col-12">
+              <div class="card card-employee-task">
+                <div class="card-body">
+                  <div class="employee-task justify-content-between align-items-center">
+                    <ul class="list-group d-flex flex-wrap list-group-horizontal">
+                        <li class="list-group-item" *ngFor="let material of materialTempList">
+                          <div class="d-flex justify-content-between">
+                            <span class="font-weight-bolder">
+                              {{ material.name }}</span
+                            >
+                            <spam class="pl-1 font-weight-bolder">{{ material.price | currency:"₹" }}</spam>
+
+                          </div>
+                          <div ngbDropdown class="dropdown d-flex align-items-end">
+                            <a ngbDropdownToggle class="btn btn-outline-primary dropdown-toggle"href="javascript:void(0);"  role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">more</a>
+
+                            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <a href="javascript:void(0)" ngbDropdownItem (click)="materialModalOpen(materialModal, material)" class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i> Edit</a>
+                              <a href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center" (click)="removeMaterial(material.materialId)"><i data-feather="trash-2" class="mr-50"></i> Delete</a>
+                            </div>
+                          </div>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--/ Measurement List Card -->
+            <!-- Measurement Add Card -->
+            <div class="col-12">
+              <div class="card card-payment">
+                <div class="card-header">
+                  <h4 class="card-title">Add Material</h4>
+                </div>
+                <div class="card-body">
+                  <form [formGroup]="materialForm" class="form form-vertical" (ngSubmit)="addMaterial()">
+                    <div class="row">
+                      <div class="col-sm-6 col-12">
+                        <div class="form-group mb-2">
+                          <label for="payment-card-number">Material Name</label>
+                          <input type="text" name="name" formControlName="name" class="form-control" placeholder="Cotton" [ngClass]="{ 'is-invalid': materialSubmitted && materialControls.name.errors }" />
+                          <div *ngIf="materialSubmitted && materialControls.name.errors" class="text-danger">
+                            <div *ngIf="materialControls.name.errors.required">name is required</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-12">
+                        <div class="form-group mb-2">
+                          <label for="payment-cvv">Price per meter</label>
+                          <input type="number" name="price" formControlName="price" class="form-control" placeholder="100" [ngClass]="{ 'is-invalid': materialSubmitted && materialControls.price.errors }" />
+                          <div *ngIf="materialSubmitted && materialControls.price.errors" class="text-danger">
+                            <div *ngIf="materialControls.price.errors.required">price is required</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-12">
+                        <button type="submit" class="btn btn-primary btn-block" rippleEffect>Add Material</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!--/ Measurement Add Card -->
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </li>
 </ul>
 <div [ngbNavOutlet]="navFilled" class="mt-2"></div>
 
@@ -311,3 +388,41 @@
   </div>
 </ng-template>
 <!-- /dress modal -->
+
+<!-- material modal -->
+<ng-template #materialModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Update material</h4>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <form [formGroup]="materialForm" class="form form-vertical" (ngSubmit)="updateMaterial()">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <div class="form-group mb-2">
+            <label for="payment-card-number">Material Name</label>
+            <input type="text" name="name" formControlName="name" class="form-control" placeholder="Cotton" [ngClass]="{ 'is-invalid': materialSubmitted && materialControls.name.errors }" />
+            <div *ngIf="materialSubmitted && materialControls.name.errors" class="text-danger">
+              <div *ngIf="materialControls.name.errors.required">name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-12">
+          <div class="form-group mb-2">
+            <label for="payment-cvv">Price per meter</label>
+            <input type="number" name="price" formControlName="price" class="form-control" placeholder="Cm" [ngClass]="{ 'is-invalid': materialSubmitted && materialControls.price.errors }" />
+            <div *ngIf="materialSubmitted && materialControls.price.errors" class="text-danger">
+              <div *ngIf="materialControls.price.errors.required">Price is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12">
+          <button type="submit" class="btn btn-primary btn-block" rippleEffect>Update Material</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!-- /material modal -->

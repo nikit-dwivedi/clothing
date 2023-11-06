@@ -231,6 +231,15 @@ export class ConfigComponent implements OnInit {
   public idList = [];
   public nameAndIdList = [];
 
+  // material list
+  public materialTempList = [];
+  materialDetails: any;
+  materialList: any;
+  materialForm: FormGroup;
+  public materialSubmitted = false;
+
+  
+
   constructor(private adminService: AdminService, private fb: FormBuilder, private toster: ToastrServiceService, private modalService: NgbModal, private selectConfig: NgSelectConfig) {
     // measurement form builder
     this.measurementConfigForm = this.fb.group({
@@ -246,6 +255,11 @@ export class ConfigComponent implements OnInit {
       configList: this.fb.array([]),
       price: ["", Validators.required],
     });
+
+    this.materialForm = this.fb.group({
+      name: ["", Validators.required],
+      price: ["", Validators.required],
+    });
   }
 
   // measurement form controller
@@ -256,6 +270,11 @@ export class ConfigComponent implements OnInit {
   // dress form controller
   get DControls() {
     return this.dressForm.controls;
+  }
+
+  // material form controller
+  get materialControls() {
+    return this.materialForm.controls;
   }
 
   modalOpen(modalBasic, row) {
@@ -306,6 +325,22 @@ export class ConfigComponent implements OnInit {
     // console.log(a.children[0].children[0].appendChild(``));
   }
 
+  materialModalOpen(modalBasic, row) {
+    this.materialDetails = row;
+    this.modalService
+      .open(modalBasic, {
+        centered: true,
+        backdrop: "static",
+        keyboard: true,
+        size: "sm",
+      })
+      .dismissed.subscribe(() => this.materialForm.reset());
+    this.materialForm.patchValue({
+      name: row.name,
+      price: row.price,
+    });
+  }
+
   compareFn(item1) {
     console.log("============", item1);
 
@@ -321,6 +356,7 @@ export class ConfigComponent implements OnInit {
     this.disableUnitFiled();
 
     this.getDress();
+    this.getMaterial();
   }
 
   onConfigIdListChange(select: any) {
@@ -415,6 +451,8 @@ export class ConfigComponent implements OnInit {
     });
   }
 
+  // --------------------------------------------- Dress --------------------------------------------- //
+
   getDress() {
     this.adminService.getAllDressList().subscribe((data: any) => {
       if (!data.status) {
@@ -434,6 +472,73 @@ export class ConfigComponent implements OnInit {
       this.toster.showSuccess(data.message, "success");
       this.modalService.dismissAll();
       this.getDress();
+    });
+  }
+
+  // -------------------------------------------------material-------------------------------------------------//
+
+  getMaterial() {
+    this.adminService.getAllMaterialList().subscribe((data: any) => {
+      if (!data.status) {
+        return;
+      }
+      this.materialList = data.items;
+      this.materialTempList = this.materialList;
+    });
+  }
+
+  addMaterial() {
+    this.materialSubmitted = true;
+    if (this.materialForm.invalid) {
+      return;
+    }
+    const reqBody = {
+      name: this.materialForm.value.name,
+      price: this.materialForm.value.price,
+    };
+    this.materialSubmitted = false;
+    this.adminService.addMaterial(reqBody).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.materialForm.reset();
+      this.getMaterial();
+    });
+  }
+
+  updateMaterial() {
+    this.materialSubmitted = true;
+    if (this.materialForm.invalid) {
+      return;
+    }
+    const reqBody = {
+      name: this.materialForm.value.name,
+      price: this.materialForm.value.price,
+    };
+    this.materialSubmitted = false;
+    this.adminService.editMaterial(this.materialDetails.materialId, reqBody).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.materialForm.reset();
+      this.getMaterial();
+    });
+  }
+
+  removeMaterial(materialId: any) {
+    this.adminService.deleteMaterial(materialId).subscribe((data: any) => {
+      if (!data.status) {
+        this.toster.showError(data.message, "Error");
+        return;
+      }
+      this.toster.showSuccess(data.message, "success");
+      this.modalService.dismissAll();
+      this.getMaterial();
     });
   }
 

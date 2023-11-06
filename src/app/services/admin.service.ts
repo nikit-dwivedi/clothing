@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class AdminService {
-  private baseUrl = "https://139.59.60.119:7889";
+  private baseUrl = "http://localhost:7089";
   constructor(private http: HttpClient) {}
 
   // token: any = JSON.parse(localStorage.getItem("authToken")).token;
@@ -91,6 +91,38 @@ export class AdminService {
 
   deleteDress(dressId: any): Observable<any> {
     return this.http.get<any>(this.baseUrl + `/v1/config/dress/remove/${dressId}`).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  getAllMaterialList(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + "/v1/config/material").pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  addMaterial(materialData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + "/v1/config/material", materialData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  editMaterial(materialId: any, materialData: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + `/v1/config/material/${materialId}`, materialData).pipe(
+      map((data: any) => {
+        return data;
+      })
+    );
+  }
+
+  deleteMaterial(materialId: any): Observable<any> {
+    return this.http.get<any>(this.baseUrl + `/v1/config/material/remove/${materialId}`).pipe(
       map((data: any) => {
         return data;
       })

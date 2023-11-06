@@ -59,6 +59,8 @@ export class OrderComponent implements OnInit {
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
   @ViewChild("tableRowDetails") tableRowDetails: any;
+  serverMaterialList: any[];
+  serverMaterialListTemp: any = [];
 
   // -------------------------------------------------stepper------------------------------------------------- //
 
@@ -86,6 +88,7 @@ export class OrderComponent implements OnInit {
           this.accountDetailsFormSubmit = false;
           if (this.dressCollection.length === 0) {
             this.getDressList();
+            this.getMaterialList();
             this.addDressToOrder();
           }
           break;
@@ -181,7 +184,6 @@ export class OrderComponent implements OnInit {
 
     // filter our data
     const temp = this.orderTempList.filter(function (d) {
-
       return d.customerId.name.toLowerCase().indexOf(val) !== -1 || d.customerId.contact.toLowerCase().indexOf(val) !== -1 || d.customerId.mail.toLowerCase().indexOf(val) !== -1 || !val;
     });
 
@@ -220,8 +222,8 @@ export class OrderComponent implements OnInit {
     });
 
     this.paymentForm = this.fb.group({
-      paymentStatus: ["pending", Validators.required],
-      paymentType: ["cash", Validators.required],
+      paymentStatus: ["pending"],
+      paymentType: ["cash"],
       amountPaid: [0],
     });
 
@@ -268,6 +270,18 @@ export class OrderComponent implements OnInit {
     return this.getConfigDetails(index).controls;
   }
 
+  getMaterialFormList(index: number): FormArray {
+    return this.getIndividualDress(index).get("materialList") as FormArray;
+  }
+  getMaterialListController(index: number) {
+    return this.getMaterialFormList(index).controls;
+  }
+  getMaterialDetail(dressIndex: number, materialIndex: any): FormGroup {
+    return this.getMaterialFormList(dressIndex).at(materialIndex) as FormGroup;
+  }
+  getMaterialDetailController(dressIndex: number, materialIndex: any) {
+    return this.getMaterialDetail(dressIndex, materialIndex).controls;
+  }
   addDressToOrder() {
     if (this.dressCollection.length === 0) {
       this.dressCollection.push(this.createMeasurementForm());
@@ -283,9 +297,13 @@ export class OrderComponent implements OnInit {
     if (this.dressCollection.length > 1) {
       this.dressCollection.removeAt(index);
       this.customerMeasurementList[index] = [];
+      this.serverMaterialListTemp[index] = [];
     }
   }
 
+  changeCatch(event: any, list: any, index: any, smallIndex: any) {
+    console.log(list, index, smallIndex);
+  }
   // Add a new dress detail input field
   addDressDetail(configId: string, name: string, dressIndex: any) {
     this.getConfigDetails(dressIndex).push(this.createDressDetail(configId, name));
@@ -294,6 +312,21 @@ export class OrderComponent implements OnInit {
   // Remove a dress detail input field
   removeDressDetail(index: number, dressIndex: any) {
     this.getConfigDetails(dressIndex).removeAt(index);
+  }
+
+  // Add a new dress detail input field
+  addMaterialDetail(dressIndex: any) {
+    this.getMaterialFormList(dressIndex).push(this.createMaterialDetail());
+  }
+
+  // Remove a dress detail input field
+  removeMaterialDetail(index: number, dressIndex: any) {
+    this.getMaterialFormList(dressIndex).removeAt(index);
+  }
+  materialChangeEvent(event: any, materialIndex: any, dressIndex: any) {
+    this.getMaterialDetailController(dressIndex, materialIndex).materialId.setValue(event?.materialId);
+    this.getMaterialDetailController(dressIndex, materialIndex).price.setValue(event?.price);
+    console.log("click", this.getMaterialDetailController(dressIndex, materialIndex));
   }
 
   // Create a new dress detail form group
@@ -306,6 +339,7 @@ export class OrderComponent implements OnInit {
       configList: this.fb.array([], Validators.required),
       description: [""],
       tag: ["", Validators.required],
+      materialList: this.fb.array([]),
     });
   }
 
@@ -315,6 +349,16 @@ export class OrderComponent implements OnInit {
       configId: [configId],
       name: [name],
       value: ["", Validators.required],
+    });
+  }
+
+  // Create a new dress detail form group
+  createMaterialDetail(): FormGroup {
+    return this.fb.group({
+      materialId: ["", Validators.required],
+      name: ["", Validators.required],
+      length: ["", Validators.required],
+      price: ["", Validators.required],
     });
   }
 
@@ -340,6 +384,10 @@ export class OrderComponent implements OnInit {
     this.patchMeasurementDetails(selectedMeasurement, index);
   }
 
+  onMaterialSelect() {
+    console.log("===========");
+  }
+
   ngOnInit(): void {
     this.getOrderList();
     // content header
@@ -363,7 +411,11 @@ export class OrderComponent implements OnInit {
     };
   }
 
-  test(i: any) {}
+  test(i: any) {
+    console.dir(i, {
+      depth: null,
+    });
+  }
 
   getAllCustomer() {
     this.adminService.getAllCustomerList().subscribe((data: any) => {
@@ -463,17 +515,34 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  getMaterialList() {
+    this.adminService.getAllMaterialList().subscribe((data) => {
+      console.log("data", data);
+
+      if (!data.status) {
+        this.serverMaterialList = [];
+        return;
+      }
+      this.serverMaterialList = data.items;
+    });
+  }
+
   submitOrderForm() {
     // this.orderForm.value
+    console.log(this.paymentForm);
     this.paymentFormSubmit = true;
-    if (this.paymentForm.invalid) {
-      return;
+    if (!this.paymentForm.value.amountPaid) {
+      this.paymentForm.controls.amountPaid.setValue(0);
+      this.paymentForm.controls.paymentStatus.setValue("pending");
+      this.paymentForm.controls.paymentType.setValue("cash");
     }
     this.paymentFormSubmit = false;
     let customerDetail = this.customerSelected ? this.customerData : this.accountDetailsForm.value;
     let { dressCollection } = this.orderForm.value;
     let paymentData = this.paymentForm.value;
     let bodyData = { customerDetail, dressCollection, paymentData };
+    console.log(bodyData);
+
     this.addOrder(bodyData);
 
     //  let a =  this.dressCollectionControl.forEach((dress) => {
@@ -533,6 +602,12 @@ export class OrderComponent implements OnInit {
     let amount = 0;
     this.dressCollectionControl.forEach((dress) => {
       amount += dress.get("price").value;
+      if (dress.get("materialList").value[0]) {
+        amount += dress.get("materialList").value.reduce((prev: any, material: any) => {
+          prev += material.price * parseFloat(material.length);
+          return prev;
+        }, 0);
+      }
     });
     return amount;
   }
