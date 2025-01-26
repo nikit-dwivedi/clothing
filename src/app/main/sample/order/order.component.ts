@@ -393,7 +393,7 @@ export class OrderComponent implements OnInit {
     // content header
     this.contentHeader = {
       headerTitle: "Orders",
-      actionButton: true,
+      // actionButton: true,
       breadcrumb: {
         type: "",
         links: [

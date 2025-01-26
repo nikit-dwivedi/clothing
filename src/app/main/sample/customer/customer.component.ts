@@ -200,7 +200,7 @@ export class CustomerComponent implements OnInit {
     // content header
     this.contentHeader = {
       headerTitle: "Customers",
-      actionButton: true,
+      // actionButton: true,
       breadcrumb: {
         type: "",
         links: [

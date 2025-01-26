@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 })
 export class AdminService {
   private baseUrl = "https://api.gohilfashionstudio.com";
+  // private baseUrl = "http://localhost:3000";
   constructor(private http: HttpClient) {}
 
   // token: any = JSON.parse(localStorage.getItem("authToken")).token;

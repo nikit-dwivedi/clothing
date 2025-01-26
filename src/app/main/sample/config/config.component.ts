@@ -393,6 +393,7 @@ export class ConfigComponent implements OnInit {
         this.toster.showError(data.message, "Error");
         return;
       }
+      this.measurementConfigForm.reset()
       this.toster.showSuccess(data.message, "success");
       this.getMeasurementConfig();
     });
@@ -575,6 +576,7 @@ export class ConfigComponent implements OnInit {
       }
       this.toster.showSuccess(data.message, "success");
       this.dressForm.reset();
+      this.nameAndIdList = []
       this.getDress();
     });
   }

@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
     this.homePageStateData();
     this.contentHeader = {
       headerTitle: "Home",
-      actionButton: true,
+      // actionButton: true,
       breadcrumb: {
         type: "",
         links: [
